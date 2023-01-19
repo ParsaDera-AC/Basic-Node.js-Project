@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crudhilla
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: crudhilla
+  template:
+    metadata:
+      labels:
+        app: crudhilla
+    spec:
+      containers:
+        - name: crudhilla
+          image: crudhilla:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: '1'
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crudhilla-balancer
+spec:
+  selector:
+    app: crudhilla
+  ports:
+    - protocol: TCP
+      port: 8000 # The port to expose to the outside
+      targetPort: 8080 # The port the application is running on in the pods
+  type: LoadBalancer
+  sessionAffinity: ClientIP
