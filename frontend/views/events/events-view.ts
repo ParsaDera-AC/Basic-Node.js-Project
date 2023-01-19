@@ -20,8 +20,8 @@ import { addDays, formatISO } from 'date-fns';
 import { Event } from '../../../src/main/models/Event'
 import '@vaadin/grid/vaadin-grid-selection-column.js';
 
-@customElement('hello-world-view')
-export class HelloWorldView extends View {
+@customElement('events-view')
+export class EventsView extends View {
   name = '';
   
   @state()
@@ -117,6 +117,7 @@ export class HelloWorldView extends View {
       .items="${this.eventOptions}"
       ></vaadin-combo-box>
     </vaadin-vertical-layout>
+    <vaadin-button class="buttonSpacer" @click="${this.onClickBack}">Back</vaadin-button>
   `;
 
   private renderFooter = () => html`
@@ -133,4 +134,9 @@ private close() {
     this.name = e.detail.value;
   }
 
+  onClickBack(){
+    window.location.href = "/";
+  }
+
 }
+
