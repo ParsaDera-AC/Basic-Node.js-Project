@@ -16,6 +16,7 @@ import { customElement, state } from 'lit/decorators.js';
 import { View } from '../../views/view';
 import { dialogFooterRenderer, dialogRenderer } from '@vaadin/dialog/lit.js';
 import type { DialogOpenedChangedEvent } from '@vaadin/dialog';
+import { addDays, formatISO } from 'date-fns';
 
 @customElement('hello-world-view')
 export class HelloWorldView extends View {
@@ -26,9 +27,20 @@ export class HelloWorldView extends View {
     this.classList.add('flex', 'p-m', 'gap-m', 'items-end');
   }
   @state()
-  private dialogOpened = true;
+  private today = '';
+  @state()
+  private upperLimit = '';
+  @state()
+  private dialogOpened = false;
+  @state()
   private items = ['Event type 1', 'Event type 2', 'Event type 3', 'Event type 4'];
   
+  firstUpdated() {
+    this.today = formatISO(Date.now(), { representation: 'date' });
+    const upperLimit = addDays(Date.now(), 3650);
+    this.upperLimit = formatISO(upperLimit, { representation: 'date' });
+  }
+
   render() {
     return html`
       <div id="user-info">
@@ -69,7 +81,12 @@ export class HelloWorldView extends View {
       clear-button-visible
       invalid
       ></vaadin-email-field>
-      <vaadin-date-picker label="Date"></vaadin-date-picker>
+      <vaadin-date-picker
+        .min="${this.today}"
+        .max="${this.upperLimit}"
+        label="Appointment date"
+        error-message="Format must be MM/DD/YYYY"
+      ></vaadin-date-picker>
       <vaadin-time-picker label="Time" value="07:00"></vaadin-time-picker>
       <vaadin-text-field label="Location"></vaadin-text-field>
       <vaadin-combo-box
