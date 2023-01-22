@@ -1,4 +1,5 @@
 import { Router } from '@vaadin/router';
+import { registerTranslateConfig, use } from 'lit-translate';
 import { routes } from './routes';
 import { appStore } from './stores/app-store';
 
@@ -15,3 +16,10 @@ window.addEventListener('vaadin-router-location-changed', (e) => {
     document.title = appStore.applicationName;
   }
 });
+
+registerTranslateConfig({
+  loader: (lang) => import(`./i18n/${lang}.json`).then((mod) => mod.default),
+});
+
+use('en');
+

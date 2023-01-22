@@ -15,6 +15,7 @@ import { router } from '../index';
 import { views } from '../routes';
 import { appStore } from '../stores/app-store';
 import { Layout } from './view';
+import { use } from 'lit-translate';
 
 interface RouteInfo {
   path: string;
@@ -29,6 +30,16 @@ export class MainLayout extends Layout {
       <vaadin-app-layout primary-section="drawer">
         <header slot="drawer">
           <h1 class="text-l m-0">${appStore.applicationName}</h1>
+
+
+          <select @change=${this.changeLanguage}>
+            <option value="en">English</option>
+            <option value="fr">French</option>
+           
+          </select>
+
+
+
         </header>
         <vaadin-scroller slot="drawer" scroll-direction="vertical">
           <!-- vcf-nav is not yet an official component -->
@@ -68,5 +79,9 @@ export class MainLayout extends Layout {
 
   private getMenuRoutes(): RouteInfo[] {
     return views.filter((route) => route.title) as RouteInfo[];
+  }
+
+  changeLanguage(e: Event) {
+    use((e.target as HTMLSelectElement).value);
   }
 }

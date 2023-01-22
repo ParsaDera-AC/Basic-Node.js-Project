@@ -17,6 +17,7 @@ import { View } from '../../views/view';
 import { dialogFooterRenderer, dialogRenderer } from '@vaadin/dialog/lit.js';
 import type { DialogOpenedChangedEvent } from '@vaadin/dialog';
 import { addDays, formatISO } from 'date-fns';
+import { translate } from 'lit-translate';
 
 @customElement('hello-world-view')
 export class HelloWorldView extends View {
@@ -51,9 +52,9 @@ export class HelloWorldView extends View {
       
       
         <vaadin-grid id="grid" theme="no-border">
-          <vaadin-grid-column header="Event Name" path="eventName"></vaadin-grid-column>
-          <vaadin-grid-column header="Event Date" path="eventDate"></vaadin-grid-column>
-          <vaadin-grid-column header="Event Confirmation" path="eventConfirm"></vaadin-grid-column>
+          <vaadin-grid-column header="${translate('event_name')}" path="eventName"></vaadin-grid-column>
+          <vaadin-grid-column header="${translate('event_date')}" path="eventDate"></vaadin-grid-column>
+          <vaadin-grid-column header="${translate('event_confirmation')}" path="eventConfirm"></vaadin-grid-column>
         </vaadin-grid>
       
         <br>
