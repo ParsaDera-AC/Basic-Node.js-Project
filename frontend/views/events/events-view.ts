@@ -7,9 +7,9 @@ import '@vaadin/notification';
 import '@vaadin/vaadin-grid/vaadin-grid';
 import '@vaadin/email-field';
 import '@vaadin/time-picker';
-import '@vaadin/vaadin-grid/vaadin-grid-column';
+import '@vaadin/grid';
 import '@vaadin/combo-box';
-import { Notification } from '@vaadin/notification';
+//import { Notification } from '@vaadin/notification';
 import '@vaadin/text-field';
 import { html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
@@ -17,15 +17,13 @@ import { View } from '../../views/view';
 import { dialogFooterRenderer, dialogRenderer } from '@vaadin/dialog/lit.js';
 import type { DialogOpenedChangedEvent } from '@vaadin/dialog';
 import { addDays, formatISO } from 'date-fns';
+import { Event } from '../../../src/main/models/Event'
+import '@vaadin/grid/vaadin-grid-selection-column.js';
 
 @customElement('hello-world-view')
 export class HelloWorldView extends View {
   name = '';
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.classList.add('flex', 'p-m', 'gap-m', 'items-end');
-  }
+  
   @state()
   private today = '';
   @state()
@@ -33,13 +31,35 @@ export class HelloWorldView extends View {
   @state()
   private dialogOpened = false;
   @state()
-  private items = ['Event type 1', 'Event type 2', 'Event type 3', 'Event type 4'];
+  private eventOptions = ['Event type 1', 'Event type 2', 'Event type 3', 'Event type 4'];
   
-  firstUpdated() {
+  private items: Event[] = [
+    { event: 'Patrol', location: 'Ottawa, ON', date: '2023-02-24', time: '16:00' },
+    { event: 'Course', location: 'Gatineau, QB', date: '2023-03-04', time: '12:00' },
+  ];
+  private selected: boolean = false;
+
+
+
+
+
+
+
+
+  async firstUpdated() {
     this.today = formatISO(Date.now(), { representation: 'date' });
     const upperLimit = addDays(Date.now(), 3650);
     this.upperLimit = formatISO(upperLimit, { representation: 'date' });
   }
+
+
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.classList.add('flex', 'p-m', 'gap-m', 'items-end');
+  }
+
+
 
   render() {
     return html`
@@ -49,11 +69,12 @@ export class HelloWorldView extends View {
         <br>
         Name: Dave Chappelle
       
-      
-        <vaadin-grid id="grid" theme="no-border">
-          <vaadin-grid-column header="Event Name" path="eventName"></vaadin-grid-column>
-          <vaadin-grid-column header="Event Date" path="eventDate"></vaadin-grid-column>
-          <vaadin-grid-column header="Event Confirmation" path="eventConfirm"></vaadin-grid-column>
+        <vaadin-grid .items="${this.items}">
+          <vaadin-grid-selection-column></vaadin-grid-selection-column>
+          <vaadin-grid-column header="Event" path="event"></vaadin-grid-column>
+          <vaadin-grid-column header="Location" path="location"></vaadin-grid-column>
+          <vaadin-grid-column header="Date" path="date"></vaadin-grid-column>
+          <vaadin-grid-column header="Time" path="time"></vaadin-grid-column>
         </vaadin-grid>
       
         <br>
@@ -93,7 +114,7 @@ export class HelloWorldView extends View {
       label="Event type"
       item-label-path="name"
       item-value-path="id"
-      .items="${this.items}"
+      .items="${this.eventOptions}"
       ></vaadin-combo-box>
     </vaadin-vertical-layout>
   `;
