@@ -1,5 +1,10 @@
 import type { Route } from '@vaadin/router';
+import './views/homepage/homepage';
+import './views/awards/awards-view';
 import './views/events/events-view';
+import './views/financial-report/financial-report-view';
+import './views/hr-history/hr-history-view';
+import './views/training-history/training-history-view';
 import './views/main-layout';
 
 export type ViewRoute = Route & {
@@ -12,25 +17,33 @@ export const views: ViewRoute[] = [
   // place routes below (more info https://hilla.dev/docs/routing)
   {
     path: '',
-    component: 'hello-world-view',
-    icon: '',
-    title: '',
+    component: 'homepage-view',
+    title: "User's Homepage",
   },
   {
-    path: 'hello',
-    component: 'hello-world-view',
-    icon: 'la la-globe',
-    title: 'Hello World',
+    path: 'Events',
+    component: 'events-view',
+    title: 'Events',
   },
   {
-    path: 'about',
-    component: 'about-view',
-    icon: 'la la-file',
-    title: 'About',
-    action: async (_context, _command) => {
-      await import('./views/about/about-view');
-      return;
-    },
+    path: 'Awards',
+    component: 'awards-view',
+    title: 'Awards',
+  },
+  {
+    path: 'TrainingHistory',
+    component: 'training-history-view',
+    title: 'Training History',
+  },
+  {
+    path: 'HrHistory',
+    component: 'hr-history-view',
+    title: 'HR History',
+  },
+  {
+    path: 'FinacialReport',
+    component: 'financial-report-view',
+    title: 'Finacial Report',
   },
 ];
 export const routes: ViewRoute[] = [

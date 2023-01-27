@@ -26,30 +26,13 @@ interface RouteInfo {
 export class MainLayout extends Layout {
   render() {
     return html`
+    <style>
+    h1{
+      text-align:center;
+    }
+    </style>
       <vaadin-app-layout primary-section="drawer">
-        <header slot="drawer">
-          <h1 class="text-l m-0">${appStore.applicationName}</h1>
-        </header>
-        <vaadin-scroller slot="drawer" scroll-direction="vertical">
-          <!-- vcf-nav is not yet an official component -->
-          <!-- For documentation, visit https://github.com/vaadin/vcf-nav#readme -->
-          <vcf-nav aria-label="${appStore.applicationName}">
-            ${this.getMenuRoutes().map(
-              (viewRoute) => html`
-                <vcf-nav-item path=${router.urlForPath(viewRoute.path)}>
-                  <span class="${viewRoute.icon} nav-item-icon" slot="prefix" aria-hidden="true"></span>
-                  ${viewRoute.title}
-                </vcf-nav-item>
-              `
-            )}
-          </vcf-nav>
-        </vaadin-scroller>
-
-        <footer slot="drawer"></footer>
-
-        <vaadin-drawer-toggle slot="navbar" aria-label="Menu toggle"></vaadin-drawer-toggle>
-        <h2 slot="navbar" class="text-l m-0">${appStore.currentViewTitle}</h2>
-
+        <h1>${appStore.currentViewTitle}</h1>
         <slot></slot>
       </vaadin-app-layout>
     `;
@@ -64,9 +47,5 @@ export class MainLayout extends Layout {
         AppLayout.dispatchCloseOverlayDrawerEvent();
       }
     );
-  }
-
-  private getMenuRoutes(): RouteInfo[] {
-    return views.filter((route) => route.title) as RouteInfo[];
   }
 }
