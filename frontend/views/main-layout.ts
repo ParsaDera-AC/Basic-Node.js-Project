@@ -9,6 +9,11 @@ import '@vaadin/scroller';
 import '@vaadin/tabs';
 import '@vaadin/tabs/vaadin-tab';
 import '@vaadin/vaadin-lumo-styles/vaadin-iconset';
+import '@vaadin/select';
+import '@vaadin/item';
+import '@vaadin/list-box';
+import '@vaadin/combo-box';
+
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { router } from '../index';
@@ -30,16 +35,6 @@ export class MainLayout extends Layout {
       <vaadin-app-layout primary-section="drawer">
         <header slot="drawer">
           <h1 class="text-l m-0">${appStore.applicationName}</h1>
-
-
-          <select @change=${this.changeLanguage}>
-            <option value="en">English</option>
-            <option value="fr">French</option>
-           
-          </select>
-
-
-
         </header>
         <vaadin-scroller slot="drawer" scroll-direction="vertical">
           <!-- vcf-nav is not yet an official component -->
@@ -59,9 +54,14 @@ export class MainLayout extends Layout {
         <footer slot="drawer"></footer>
 
         <vaadin-drawer-toggle slot="navbar" aria-label="Menu toggle"></vaadin-drawer-toggle>
+        <vaadin-list-box>
+          <vaadin-item value="en" @click="${this.switchToEnglish}" style="font-size: smaller;">English</vaadin-item>
+          <vaadin-item value="fr" @click="${this.switchToFrench}" style="font-size: smaller;">French</vaadin-item>
+        </vaadin-list-box>
         <h2 slot="navbar" class="text-l m-0">${appStore.currentViewTitle}</h2>
 
         <slot></slot>
+        
       </vaadin-app-layout>
     `;
   }
@@ -83,5 +83,13 @@ export class MainLayout extends Layout {
 
   changeLanguage(e: Event) {
     use((e.target as HTMLSelectElement).value);
+  }
+
+  switchToFrench() {
+    use('fr');
+  }
+
+  switchToEnglish() {
+    use('en');
   }
 }
