@@ -19,11 +19,16 @@ import type { DialogOpenedChangedEvent } from '@vaadin/dialog';
 import { addDays, formatISO } from 'date-fns';
 import { Event } from '../../../src/main/models/Event'
 import '@vaadin/grid/vaadin-grid-selection-column.js';
+import '@vaadin/confirm-dialog';
+import type { ConfirmDialogOpenedChangedEvent } from '@vaadin/confirm-dialog';
 
 @customElement('events-view')
 export class EventsView extends View {
   name = '';
-  
+  @state()
+  private confirmDialogOpened = true;
+  @state()
+  private status = '';
   @state()
   private today = '';
   @state()
@@ -82,9 +87,26 @@ export class EventsView extends View {
         ${dialogRenderer(this.renderDialog, [])}
         ${dialogFooterRenderer(this.renderFooter, [])}
       ></vaadin-dialog>
+      <vaadin-confirm-dialog
+          header="Delete Event"
+          cancel
+          @cancel="${() => (this.status = 'Canceled')}"
+          reject
+          reject-text="Discard"
+          @reject="${() => (this.status = 'Discarded')}"
+          confirm-text="Delete"
+          @confirm="${() => (this.status = 'Saved')}"
+          .opened="${this.confirmDialogOpened}"
+          @opened-changed="${this.openedChanged}"
+        >
+          Are you sure you want to delete this event?
+        </vaadin-confirm-dialog>
+
+
       
       <vaadin-button @click="${() => (this.dialogOpened = true)}">Create New Event</vaadin-button>
       <vaadin-button @click="${() => (this.dialogOpened = true)}">Edit Event</vaadin-button>
+      <vaadin-button @click="${() => (this.confirmDialogOpened = true)}">Delete Event</vaadin-button>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       </div>  
 
@@ -126,6 +148,12 @@ export class EventsView extends View {
   
 `;
 
+openedChanged(e: ConfirmDialogOpenedChangedEvent) {
+  this.confirmDialogOpened = e.detail.value;
+  if (this.confirmDialogOpened) {
+    this.status = '';
+  }
+}
 private close() {
     this.dialogOpened = false;
   }
