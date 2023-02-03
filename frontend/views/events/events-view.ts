@@ -9,7 +9,6 @@ import '@vaadin/email-field';
 import '@vaadin/time-picker';
 import '@vaadin/grid';
 import '@vaadin/combo-box';
-//import { Notification } from '@vaadin/notification';
 import '@vaadin/text-field';
 import { html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
@@ -36,20 +35,13 @@ export class EventsView extends View {
   @state()
   private dialogOpened = false;
   @state()
-  private eventOptions = ['Event type 1', 'Event type 2', 'Event type 3', 'Event type 4'];
+  private eventOptions = ['Patrol', 'Training', 'Workshop'];
   
   private items: Event[] = [
     { event: 'Patrol', location: 'Ottawa, ON', date: '2023-02-24', time: '16:00' },
     { event: 'Course', location: 'Gatineau, QB', date: '2023-03-04', time: '12:00' },
   ];
   private selected: boolean = false;
-
-
-
-
-
-
-
 
   async firstUpdated() {
     this.today = formatISO(Date.now(), { representation: 'date' });
@@ -109,7 +101,7 @@ export class EventsView extends View {
       <vaadin-button @click="${() => (this.confirmDialogOpened = true)}">Delete Event</vaadin-button>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       </div>  
-
+      <vaadin-button class="buttonSpacer" @click="${this.onClickBack}">Back</vaadin-button>
      
     `;
   }
@@ -139,7 +131,7 @@ export class EventsView extends View {
       .items="${this.eventOptions}"
       ></vaadin-combo-box>
     </vaadin-vertical-layout>
-    <vaadin-button class="buttonSpacer" @click="${this.onClickBack}">Back</vaadin-button>
+    
   `;
 
   private renderFooter = () => html`

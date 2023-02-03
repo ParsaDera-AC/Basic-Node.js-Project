@@ -45,7 +45,7 @@ export class HomepageView extends View {
     window.location.href = "/Awards";
   }
   onClickFinacialReport() {
-    window.location.href = "/FinacialReport";
+    window.location.href = "/FinancialReport";
   }
 
 }
