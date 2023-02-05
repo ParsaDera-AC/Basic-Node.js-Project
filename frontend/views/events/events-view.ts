@@ -26,7 +26,7 @@ import type { ConfirmDialogOpenedChangedEvent } from '@vaadin/confirm-dialog';
 export class EventsView extends View {
   name = '';
   @state()
-  private confirmDialogOpened = true;
+  private confirmDialogOpened = false;
   @state()
   private status = '';
   @state()
