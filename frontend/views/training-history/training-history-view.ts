@@ -39,10 +39,7 @@ interface UserInfo {
 export class TrainingHistoryView extends View {
 
   @state()
-  private person: string[] = ["007","Karim Bagheri","Karim@bagher.hcl","Driver","1959"];
-  @state()
   private text = 'Username : Dave01\nName : Dave Chappelle'
-  @state()
   private gridItems: CourseItem[] = [
     { regDate: new Date("2019-01-16"), course: 'Ski Patrol Course 1',compDate: new Date("2019-10-30") },
     { regDate: new Date("2020-01-16"), course: 'Ski Patrol Course 2',compDate: new Date("2020-10-30") },
@@ -50,7 +47,6 @@ export class TrainingHistoryView extends View {
   private userInfo: UserInfo[] = [
     { username:"Dave01", name: "Dave Chappelle"},
   ];
-  @state()
   private justifyContent = 'flex-start';
   private alignItems = 'stretch';
 
@@ -79,6 +75,7 @@ export class TrainingHistoryView extends View {
       <vaadin-grid-sort-column path="course" name="Course" header="Name"></vaadin-grid-sort-column>
       <vaadin-grid-sort-column path="compDate" name="Completion Date"></vaadin-grid-sort-column>
     </vaadin-grid>
+    <vaadin-button class="buttonSpacer" @click="${this.onClickBack}">Back</vaadin-button>
 
       
     `;
