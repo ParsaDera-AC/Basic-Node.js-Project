@@ -1,6 +1,6 @@
 import '@vaadin/button';
 import { html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { View } from '../view';
 import { FinancialReport } from '../../../src/main/models/FinancialReport'
 import '@vaadin/grid/vaadin-grid-selection-column.js';
@@ -16,6 +16,7 @@ import '@vaadin/time-picker';
 import '@vaadin/grid';
 import '@vaadin/combo-box';
 import '@vaadin/text-field';
+import { GridActiveItemChangedEvent } from '@vaadin/vaadin-grid/vaadin-grid';
 
 @customElement('financial-report-view')
 
@@ -31,6 +32,8 @@ export class FinancialReportView extends View {
     { title: "Tax slip", date: "2021-01-01", type: "T4" },
     { title: "Q1 Report", date: "2023-01-01", type: "Quarterly Fiscal" },
   ];
+  @state()
+  private selectedItems: FinancialReport[] = [];
   private selected: boolean = false;
 
   render() {
@@ -52,7 +55,6 @@ export class FinancialReportView extends View {
     .spacing{
       padding-left: 850px;
     }
-  }
     </style>
 
 
@@ -65,8 +67,14 @@ export class FinancialReportView extends View {
         </span>
 
         <span class="table">
-        <vaadin-grid .items="${this.reports}">
-          <vaadin-grid-selection-column></vaadin-grid-selection-column>
+        <vaadin-grid
+        .items="${this.reports}"
+        .selectedItems="${this.selectedItems}"
+        @active-item-changed="${(e: GridActiveItemChangedEvent<FinancialReport>) => {
+          const item = e.detail.value;
+          this.selectedItems = item ? [item] : [];
+        }}"
+      >
           <vaadin-grid-column header="Title" path="title"></vaadin-grid-column>
           <vaadin-grid-column header="Date" path="date" ></vaadin-grid-column>
           <vaadin-grid-column header="Type" path="type"></vaadin-grid-column>
@@ -94,4 +102,6 @@ export class FinancialReportView extends View {
   onClickBack(){
     window.location.href = "/";
   }
+
+  
 }
