@@ -41,9 +41,9 @@ export const views: ViewRoute[] = [
     title: 'HR History',
   },
   {
-    path: 'FinacialReport',
+    path: 'FinancialReport',
     component: 'financial-report-view',
-    title: 'Finacial Report',
+    title: 'Financial Report',
   },
 ];
 export const routes: ViewRoute[] = [

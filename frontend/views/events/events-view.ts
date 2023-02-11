@@ -9,7 +9,6 @@ import '@vaadin/email-field';
 import '@vaadin/time-picker';
 import '@vaadin/grid';
 import '@vaadin/combo-box';
-//import { Notification } from '@vaadin/notification';
 import '@vaadin/text-field';
 import { html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
@@ -21,6 +20,7 @@ import { Event } from '../../../src/main/models/Event'
 import '@vaadin/grid/vaadin-grid-selection-column.js';
 import '@vaadin/confirm-dialog';
 import type { ConfirmDialogOpenedChangedEvent } from '@vaadin/confirm-dialog';
+import { GridActiveItemChangedEvent } from '@vaadin/vaadin-grid/vaadin-grid';
 
 @customElement('events-view')
 export class EventsView extends View {
@@ -36,20 +36,15 @@ export class EventsView extends View {
   @state()
   private dialogOpened = false;
   @state()
-  private eventOptions = ['Event type 1', 'Event type 2', 'Event type 3', 'Event type 4'];
-  
+  private eventOptions = ['Patrol', 'Training', 'Workshop'];
+  @state()
+  private selectedItems: Event[] = [];
+
   private items: Event[] = [
     { event: 'Patrol', location: 'Ottawa, ON', date: '2023-02-24', time: '16:00' },
     { event: 'Course', location: 'Gatineau, QB', date: '2023-03-04', time: '12:00' },
   ];
   private selected: boolean = false;
-
-
-
-
-
-
-
 
   async firstUpdated() {
     this.today = formatISO(Date.now(), { representation: 'date' });
@@ -68,25 +63,54 @@ export class EventsView extends View {
 
   render() {
     return html`
-      <div id="user-info">
+    <style>
+    .table{
+      width: 1000px;
+      padding-left:480px;
+      padding-bottom: 20px;
+    }
+    .button-spacing{
+      padding-left:480px;
+    }
+    .user-space{
+      padding-bottom: 50px;
+      padding-left: 480px;
+
+    }
+    .spacing{
+      padding-left: 545px;
+    }
+    </style>
+
+
+  <vaadin-vertical-layout>
+    <span class="user-space">
       
         Username: Dave01
         <br>
         Name: Dave Chappelle
-      
-        <vaadin-grid .items="${this.items}">
-          <vaadin-grid-selection-column></vaadin-grid-selection-column>
+    </span>
+    <span class="table">
+        <vaadin-grid
+        .items="${this.items}"
+        .selectedItems="${this.selectedItems}"
+        @active-item-changed="${(e: GridActiveItemChangedEvent<Event>) => {
+        const item = e.detail.value;
+        this.selectedItems = item ? [item] : [];
+      }}"
+      >
           <vaadin-grid-column header="Event" path="event"></vaadin-grid-column>
           <vaadin-grid-column header="Location" path="location"></vaadin-grid-column>
           <vaadin-grid-column header="Date" path="date"></vaadin-grid-column>
           <vaadin-grid-column header="Time" path="time"></vaadin-grid-column>
         </vaadin-grid>
-      
-        <br>
+    </span>
+
         <vaadin-dialog header-title="New Event" .opened="${this.dialogOpened}" @opened-changed="${(e: DialogOpenedChangedEvent) => (this.dialogOpened = e.detail.value)}"
         ${dialogRenderer(this.renderDialog, [])}
         ${dialogFooterRenderer(this.renderFooter, [])}
       ></vaadin-dialog>
+
       <vaadin-confirm-dialog
           header="Delete Event"
           cancel
@@ -103,14 +127,19 @@ export class EventsView extends View {
         </vaadin-confirm-dialog>
 
 
-      
+    <vaadin-horizontal-layout>
+    <span class="button-spacing">
       <vaadin-button @click="${() => (this.dialogOpened = true)}">Create New Event</vaadin-button>
       <vaadin-button @click="${() => (this.dialogOpened = true)}">Edit Event</vaadin-button>
       <vaadin-button @click="${() => (this.confirmDialogOpened = true)}">Delete Event</vaadin-button>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      </div>  
 
-     
+    </span>
+      
+      <span class="spacing">
+      <vaadin-button class="buttonSpacer" @click="${this.onClickBack}">Back</vaadin-button>
+      </span>
+    </vaadin-horizontal-layout>
+    </vaadin-vertical-layout>
     `;
   }
   private renderDialog = () => html`
@@ -139,7 +168,7 @@ export class EventsView extends View {
       .items="${this.eventOptions}"
       ></vaadin-combo-box>
     </vaadin-vertical-layout>
-    <vaadin-button class="buttonSpacer" @click="${this.onClickBack}">Back</vaadin-button>
+    
   `;
 
   private renderFooter = () => html`
@@ -148,13 +177,13 @@ export class EventsView extends View {
   
 `;
 
-openedChanged(e: ConfirmDialogOpenedChangedEvent) {
-  this.confirmDialogOpened = e.detail.value;
-  if (this.confirmDialogOpened) {
-    this.status = '';
+  openedChanged(e: ConfirmDialogOpenedChangedEvent) {
+    this.confirmDialogOpened = e.detail.value;
+    if (this.confirmDialogOpened) {
+      this.status = '';
+    }
   }
-}
-private close() {
+  private close() {
     this.dialogOpened = false;
   }
 
@@ -162,7 +191,7 @@ private close() {
     this.name = e.detail.value;
   }
 
-  onClickBack(){
+  onClickBack() {
     window.location.href = "/";
   }
 
