@@ -15,22 +15,21 @@ export class DashboardView extends View {
   render() {
     return html`
       <div class="text-xl mb-xl">
-        ${dashboardViewStore.contactCount} contacts
+        ${dashboardViewStore.eventCount} events
       </div>
       
-      ${this.getCompanyStats()}
       `
   }
 
-  getCompanyStats() {
-    if(dashboardViewStore.companyStats.length === 0) {
-      return html`<p>Loading stats...</p>`
-    } else {
-      return html`
-      <vaadin-chart type="pie">
-        <vaadin-chart-series .values=${dashboardViewStore.companyStats}></vaadin-chart-series>
-      </vaadin-chart>
-      `
-    }
-  }
+  // getCompanyStats() {
+  //   if(dashboardViewStore.companyStats.length === 0) {
+  //     return html`<p>Loading stats...</p>`
+  //   } else {
+  //     return html`
+  //     <vaadin-chart type="pie">
+  //       <vaadin-chart-series .values=${dashboardViewStore.companyStats}></vaadin-chart-series>
+  //     </vaadin-chart>
+  //     `
+  //   }
+  // }
 }

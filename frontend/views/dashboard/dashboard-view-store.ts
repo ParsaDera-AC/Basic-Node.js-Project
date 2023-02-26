@@ -7,13 +7,13 @@ class DashboardViewStore {
     makeAutoObservable(this);
   }
 
-  get contactCount() {
-    return crmStore.contacts.length;
+  get eventCount() {
+    return crmStore.events.length;
   }
 
   get companyStats() {
-    const countByCompany = crmStore.contacts.reduce((map, contact) => {
-      const name = contact.company?.name || "Unknown";
+    const countByCompany = crmStore.events.reduce((map, event) => {
+      const name = event.eventName || "Unknown";
       return map.set(name, (map.get(name) || 0) + 1)
     }, new Map<string, number>())
 

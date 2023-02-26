@@ -1,46 +1,46 @@
-import Contact from "Frontend/generated/com/example/application/data/entity/Contact";
-import ContactModel from "Frontend/generated/com/example/application/data/entity/ContactModel";
+import Event from "Frontend/entity/Event";
+import EventModel from "Frontend/entity/EventModel";
 import { crmStore } from "Frontend/stores/app-store";
 import { makeAutoObservable, observable } from "mobx";
 
 class ListViewStore {
   filterText = '';
-  selectedContact: Contact | null = null;
+  selectedEvent: Event | null = null;
 
   constructor() {
-    makeAutoObservable(this, {selectedContact: observable.ref}, {autoBind: true});
+    makeAutoObservable(this, {selectedEvent: observable.ref}, {autoBind: true});
   }
 
   updateFilter(filterText: string) {
     this.filterText = filterText;
   }
 
-  get filteredContacts() {
+  get filteredEvents() {
     const filter = new RegExp(this.filterText, 'i');
-    const contacts = crmStore.contacts;
-    return contacts.filter((contact) => filter.test(`${contact.firstName} ${contact.lastName}`))
+    const events = crmStore.events;
+    return events.filter((event) => filter.test(`${event.eventName}`))
   }
 
-  setSelectedContact(contact: Contact) {
-    this.selectedContact = contact;
+  setSelectedContact(event: Event) {
+    this.selectedEvent = event;
   }
 
   editNew() {
-    this.selectedContact = ContactModel.createEmptyValue();
+    this.selectedEvent = EventModel.createEmptyValue();
   }
 
   cancelEdit() {
-    this.selectedContact = null;
+    this.selectedEvent = null;
   }
 
-  async save(contact:Contact) {
-    await crmStore.saveContact(contact);
+  async save(event:Event) {
+    await crmStore.saveEvent(event);
     this.cancelEdit();
   }
 
   async delete() {
-    if (this.selectedContact) {
-      await crmStore.deleteContact(this.selectedContact);
+    if (this.selectedEvent) {
+      await crmStore.deleteContact(this.selectedEvent);
       this.cancelEdit();
     }
   }

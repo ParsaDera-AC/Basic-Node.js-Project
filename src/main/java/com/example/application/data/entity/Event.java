@@ -6,12 +6,13 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
 public class Event extends AbstractEntity {
+
+    private Event event;
 
     @NotEmpty
     private String eventName = "";
@@ -20,16 +21,24 @@ public class Event extends AbstractEntity {
     private String location = "";
 
     @NotNull
-    @ManyToOne
-    private Time time;
+    @NotEmpty
+    private Date time;
 
-    @Email
+    @NotNull
     @NotEmpty
     private Date date;
 
     @Override
     public String toString() {
         return eventName;
+    }
+
+    public void setEvent(Event event){
+        this.event=event;
+    }
+
+    public Event getEvent() {
+        return event;
     }
 
     public String getEventName() {
@@ -50,7 +59,7 @@ public class Event extends AbstractEntity {
 
    
 
-    public Time getTime() {
+    public Date getTime() {
         return time;
     }
 
