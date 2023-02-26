@@ -1,24 +1,18 @@
 import { makeAutoObservable, observable, runInAction } from 'mobx';
 
-import Company from 'Frontend/generated/com/example/application/data/entity/Company';
-import Contact from 'Frontend/generated/com/example/application/data/entity/Contact';
-import Status from 'Frontend/generated/com/example/application/data/entity/Status';
+import Event from 'Frontend/entity/Event';
 import { CrmEndpoint } from 'Frontend/generated/endpoints';
 import { uiStore } from './app-store';
 
 export class CrmStore {
-  contacts: Contact[] = [];
-  companies: Company[] = [];
-  statuses: Status[] = [];
+  events: Event[] = [];
 
   constructor() {
     makeAutoObservable(
       this,
       {
         initFromServer: false,
-        contacts: observable.shallow,
-        companies: observable.shallow,
-        statuses: observable.shallow
+        events: observable.shallow,
       },
       {autoBind: true}
     )
@@ -30,45 +24,43 @@ export class CrmStore {
     const data = await CrmEndpoint.getCrmData();
 
     runInAction(() => {
-      this.contacts = data.contacts;
-      this.companies = data.companies;
-      this.statuses = data.statuses;
+      this.events = data.events;
     })
   }
 
-  async saveContact(contact:Contact) {
+  async saveEvent(event:Event) {
     try {
-      const saved = await CrmEndpoint.saveContact(contact);
+      const saved = await CrmEndpoint.saveEvent(event);
       if (saved) {
         this.saveLocal(saved);
-        uiStore.showSuccess('Contact saved');
+        uiStore.showSuccess('Event saved');
       } else {
-        uiStore.showError('Contact save failed');
+        uiStore.showError('Event save failed');
         
       }
     } catch (e) {
       console.log(e);
-      uiStore.showError('Contact save failed');
+      uiStore.showError('Event save failed');
     }
   }
 
-  async deleteContact(contact:Contact) {
-    if(!contact.id) return;
+  async deleteContact(event:Event) {
+    if(!event.id) return;
 
     try {
-      await CrmEndpoint.deleteContact(contact.id);
-      this.deleteLocal(contact);
-      uiStore.showSuccess('Contact deleted');
+      await CrmEndpoint.deleteContact(event.id);
+      this.deleteLocal(event);
+      uiStore.showSuccess('event deleted');
     } catch (e) {
       console.log(e);
-      uiStore.showError('Failed to delete contact')
+      uiStore.showError('Failed to delete event')
     }
   }
 
-  private saveLocal(saved:Contact) {
-    const contactExists = this.contacts.some((c) => c.id == saved.id);
+  private saveLocal(saved:Event) {
+    const contactExists = this.events.some((c) => c.id == saved.id);
     if (contactExists) {
-      this.contacts = this.contacts.map((existing) => {
+      this.events = this.events.map((existing) => {
         if (existing.id === saved.id) {
           return saved
         } else {
@@ -76,12 +68,12 @@ export class CrmStore {
         }
       })
     } else {
-      this.contacts.push(saved)
+      this.events.push(saved)
     }
   }
 
-  private deleteLocal(contact:Contact) {
-    this.contacts = this.contacts.filter((c) => c.id !== contact.id)
+  private deleteLocal(event:Event) {
+    this.events = this.events.filter((c) => c.id !== event.id)
   }
 }
 
