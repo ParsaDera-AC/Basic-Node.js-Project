@@ -25,12 +25,13 @@ export class FinancialReportView extends View {
   connectedCallback() {
     super.connectedCallback();
     this.classList.add('flex', 'p-m', 'gap-m', 'items-end');
+    this.prepareData();
   }
 
   private reports: FinancialReport [] = [
-    { title: "Tax slip", date: "2022-01-01", type: "T4" },
-    { title: "Tax slip", date: "2021-01-01", type: "T4" },
-    { title: "Q1 Report", date: "2023-01-01", type: "Quarterly Fiscal" }
+    { title: "Tax slip", date: this.formatDate(new Date("2022/01/01")), type: "T4" },
+    { title: "Tax slip", date: this.formatDate(new Date("2021/01/01")), type: "T4" },
+    { title: "Q1 Report", date: this.formatDate(new Date("2023/01/01")), type: "Quarterly Fiscal" }
   ];
   @state()
   private selectedItems: FinancialReport[] = [];
@@ -86,6 +87,24 @@ export class FinancialReportView extends View {
     //To do: Implement View dialog logic
   }
 
+  formatDate(date: Date): string {
+    return date.toISOString().substr(0, 10);
+  }
+
+  prepareData(){
+    this.reports.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      if (dateA > dateB) {
+        return -1;
+      }
+      if (dateA < dateB) {
+        return 1;
+      }
+      return 0;
+    });
+
+  }
 
   onClickBack(){
     window.location.href = "/";

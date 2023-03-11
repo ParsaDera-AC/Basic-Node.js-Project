@@ -21,6 +21,8 @@ import '@vaadin/grid/vaadin-grid-selection-column.js';
 import '@vaadin/confirm-dialog';
 import type { ConfirmDialogOpenedChangedEvent } from '@vaadin/confirm-dialog';
 import { GridActiveItemChangedEvent } from '@vaadin/vaadin-grid/vaadin-grid';
+import '@vaadin/notification';
+import { Notification } from '@vaadin/notification';
 
 @customElement('events-view')
 export class EventsView extends View {
@@ -39,12 +41,13 @@ export class EventsView extends View {
   private eventOptions = ['Patrol', 'Training', 'Workshop'];
   @state()
   private selectedItems: Event[] = [];
-  @state()
-  private isRowSelected = false;
 
+  private isRowSelected = false;
+  private titleHeader = "";
   private items: Event[] = [
-    { event: 'Patrol', location: 'Ottawa, ON', date: '2023-02-24', time: '16:00' },
-    { event: 'Course', location: 'Gatineau, QB', date: '2023-03-04', time: '12:00' },
+    
+    { eventId: 1, name: "CPR Training", event: this.eventOptions[1], location: 'Ottawa, ON', date: this.formatDate(new Date('2023/04/12')), time: '07:00', email: "test@gmail.com" },
+    {eventId:2, name:"Calaboge Peaks", event: this.eventOptions[0], location: 'Calabogie, ON', date: this.formatDate(new Date('2023/10/02')), time: '16:00', email: "test@gmail.com"  },
   ];
 
 
@@ -59,9 +62,10 @@ export class EventsView extends View {
   connectedCallback() {
     super.connectedCallback();
     this.classList.add('flex', 'p-m', 'gap-m', 'items-end');
+    this.prepareData();
+    
+    
   }
-
-
 
   render() {
 
@@ -92,39 +96,36 @@ export class EventsView extends View {
         this.isRowSelected = Boolean(item);
       }}"
       >
-          <vaadin-grid-sort-column header="Event" path="event"></vaadin-grid-sort-column>
+        <vaadin-grid-sort-column header="Event Name" path="name"></vaadin-grid-sort-column>
+          <vaadin-grid-sort-column header="Event Type" path="event"></vaadin-grid-sort-column>
           <vaadin-grid-column header="Location" path="location"></vaadin-grid-column>
           <vaadin-grid-sort-column header="Date" path="date"></vaadin-grid-sort-column>
           <vaadin-grid-column header="Time" path="time"></vaadin-grid-column>
         </vaadin-grid>
     </span>
 
-        <vaadin-dialog header-title="New Event" .opened="${this.dialogOpened}" @opened-changed="${(e: DialogOpenedChangedEvent) => (this.dialogOpened = e.detail.value)}"
+        <vaadin-dialog header-title="${this.titleHeader}" .opened="${this.dialogOpened}" @opened-changed="${(e: DialogOpenedChangedEvent) => (this.dialogOpened = e.detail.value)}"
         ${dialogRenderer(this.renderDialog, [])}
         ${dialogFooterRenderer(this.renderFooter, [])}
       ></vaadin-dialog>
 
+     
       <vaadin-confirm-dialog
-          header="Delete Event"
-          cancel
-          @cancel="${() => (this.status = 'Canceled')}"
-          reject
-          reject-text="Discard"
-          @reject="${() => (this.status = 'Discarded')}"
-          confirm-text="Delete"
-          @confirm="${() => (this.status = 'Saved')}"
-          .opened="${this.confirmDialogOpened}"
-          @opened-changed="${this.openedChanged}"
-        >
-          Are you sure you want to delete this event?
-        </vaadin-confirm-dialog>
-
+      header="Delete Event"
+      cancel
+      @cancel="${() => (this.status = 'Canceled')}"
+      confirm-text="Delete"
+      @confirm="${() => (this.status = 'Saved')}"
+      .opened="${this.confirmDialogOpened}"
+      @opened-changed="${this.openedChanged}">
+      Are you sure you want to delete this event?
+      </vaadin-confirm-dialog>
 
     <vaadin-horizontal-layout>
     <span class="button-spacing">
-      <vaadin-button @click="${() => (this.dialogOpened = true)}">Create New Event</vaadin-button>
+      <vaadin-button id="newEventBtn" @click="${this.newButton}">Create New Event</vaadin-button>
       <vaadin-button id="editEventBtn" @click="${this.editButton}">Edit Event</vaadin-button>
-      <vaadin-button @click="${() => (this.confirmDialogOpened = true)}">Delete Event</vaadin-button>
+      <vaadin-button id="deleteEventBtn" @click="${this.deleteButton}">Delete Event</vaadin-button>
 
     </span>
       
@@ -135,31 +136,34 @@ export class EventsView extends View {
     </vaadin-vertical-layout>
     `;
   }
+
   private renderDialog = () => html`
     <vaadin-vertical-layout style="align-items: stretch; width: 18rem; max-width: 100%;">
-      <vaadin-text-field label="Event name"></vaadin-text-field>
+      <vaadin-text-field label="Event name" value="${this.selectedItems.length > 0 ? this.selectedItems[0].name : ''}"></vaadin-text-field>
       <vaadin-email-field
       label="Email address"
       name="email"
-      value=""
+      value="${this.selectedItems.length > 0 ? this.selectedItems[0].email : ''}"
       error-message="Enter a valid email address"
       clear-button-visible
       invalid
-      ></vaadin-email-field>
-      <vaadin-date-picker
+     ></vaadin-email-field>
+      <vaadin-date-picker .value="${this.selectedItems.length > 0 ? this.selectedItems[0].date  : ''}" .valueMapper="${(value: string | null) => {
+        return value ? new Date(value).toISOString().substr(0, 10) : null;
+      }}" 
         .min="${this.today}"
         .max="${this.upperLimit}"
         label="Appointment date"
-        error-message="Format must be MM/DD/YYYY"
+        error-message="Format is Month/Day/Year"
       ></vaadin-date-picker>
-      <vaadin-time-picker label="Time" value="07:00"></vaadin-time-picker>
-      <vaadin-text-field label="Location"></vaadin-text-field>
+      <vaadin-time-picker label="Time" value="${this.selectedItems.length > 0 ? this.selectedItems[0].time : ''}"></vaadin-time-picker>
+      <vaadin-text-field label="Location" value="${this.selectedItems.length > 0 ? this.selectedItems[0].location: ''}"></vaadin-text-field>
       <vaadin-combo-box
       label="Event type"
       item-label-path="name"
       item-value-path="id"
       .items="${this.eventOptions}"
-      ></vaadin-combo-box>
+      value="${this.selectedItems.length > 0 ? this.selectedItems[0].event : ''}"></vaadin-combo-box>
     </vaadin-vertical-layout>
     
   `;
@@ -174,25 +178,84 @@ export class EventsView extends View {
     this.confirmDialogOpened = e.detail.value;
     if (this.confirmDialogOpened) {
       this.status = '';
+    }else{
+      this.selectedItems = [];
     }
   }
 
   private close() {
     this.dialogOpened = false;
+    this.selectedItems = [];
+  }
+
+  newButton(){
+    const button = document.getElementById("newEventBtn") as HTMLButtonElement;
+    if(this.selectedItems.length == 0){
+      this.dialogOpened = true;
+      this.titleHeader ="New Event";
+    }else{
+
+      button.disabled;
+      Notification.show("Deselect a entry from the table before creating a new event.", {position:"top-center", duration:3000, theme:"error"});
+      
+    }
+
   }
 
   editButton(){
     const button = document.getElementById("editEventBtn") as HTMLButtonElement;
 
     if(this.selectedItems.length == 0){
-      this.isRowSelected = true;
-      this.dialogOpened = true;
-    
-    }else{
       this.isRowSelected = false;
       button.disabled;
+      Notification.show("Select a entry from the table before editing your event.", {position:"top-center", duration:3000, theme:"error"});
+    
+    }else{
+      this.isRowSelected = true;
+      this.dialogOpened = true;
+      this.titleHeader ="Edit Event";
+      
+      
     }
+
   }
+
+  deleteButton(){
+    const button = document.getElementById("deleteEventBtn") as HTMLButtonElement;
+
+    if(this.selectedItems.length == 0){
+      this.isRowSelected = false;
+      button.disabled;
+      Notification.show("Select a entry from the table before deleting your event.", {position:"top-center", duration:3000, theme:"error"});
+      
+    
+    }else{
+      this.isRowSelected = true;
+      this.confirmDialogOpened = true
+      
+    }
+
+  }
+
+  formatDate(date: Date): string {
+    return date.toISOString().substr(0, 10);
+  }
+
+  prepareData(){
+    this.items.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      if (dateA < dateB) {
+        return -1;
+      }
+      if (dateA > dateB) {
+        return 1;
+      }
+      return 0;
+    });
+
+  }
+
 
   onClickBack() {
     window.location.href = "/";
