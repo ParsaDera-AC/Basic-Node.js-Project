@@ -39,12 +39,14 @@ export class EventsView extends View {
   private eventOptions = ['Patrol', 'Training', 'Workshop'];
   @state()
   private selectedItems: Event[] = [];
+  @state()
+  private isRowSelected = false;
 
   private items: Event[] = [
     { event: 'Patrol', location: 'Ottawa, ON', date: '2023-02-24', time: '16:00' },
     { event: 'Course', location: 'Gatineau, QB', date: '2023-03-04', time: '12:00' },
   ];
-  private selected: boolean = false;
+
 
   async firstUpdated() {
     this.today = formatISO(Date.now(), { representation: 'date' });
@@ -62,6 +64,7 @@ export class EventsView extends View {
 
 
   render() {
+
     return html`
     <style>
     .table{
@@ -72,11 +75,6 @@ export class EventsView extends View {
     .button-spacing{
       padding-left:480px;
     }
-    .user-space{
-      padding-bottom: 50px;
-      padding-left: 480px;
-
-    }
     .spacing{
       padding-left: 545px;
     }
@@ -84,12 +82,6 @@ export class EventsView extends View {
 
 
   <vaadin-vertical-layout>
-    <span class="user-space">
-      
-        Username: Dave01
-        <br>
-        Name: Dave Chappelle
-    </span>
     <span class="table">
         <vaadin-grid
         .items="${this.items}"
@@ -97,11 +89,12 @@ export class EventsView extends View {
         @active-item-changed="${(e: GridActiveItemChangedEvent<Event>) => {
         const item = e.detail.value;
         this.selectedItems = item ? [item] : [];
+        this.isRowSelected = Boolean(item);
       }}"
       >
-          <vaadin-grid-column header="Event" path="event"></vaadin-grid-column>
+          <vaadin-grid-sort-column header="Event" path="event"></vaadin-grid-sort-column>
           <vaadin-grid-column header="Location" path="location"></vaadin-grid-column>
-          <vaadin-grid-column header="Date" path="date"></vaadin-grid-column>
+          <vaadin-grid-sort-column header="Date" path="date"></vaadin-grid-sort-column>
           <vaadin-grid-column header="Time" path="time"></vaadin-grid-column>
         </vaadin-grid>
     </span>
@@ -130,7 +123,7 @@ export class EventsView extends View {
     <vaadin-horizontal-layout>
     <span class="button-spacing">
       <vaadin-button @click="${() => (this.dialogOpened = true)}">Create New Event</vaadin-button>
-      <vaadin-button @click="${() => (this.dialogOpened = true)}">Edit Event</vaadin-button>
+      <vaadin-button id="editEventBtn" @click="${this.editButton}">Edit Event</vaadin-button>
       <vaadin-button @click="${() => (this.confirmDialogOpened = true)}">Delete Event</vaadin-button>
 
     </span>
@@ -183,12 +176,22 @@ export class EventsView extends View {
       this.status = '';
     }
   }
+
   private close() {
     this.dialogOpened = false;
   }
 
-  nameChanged(e: CustomEvent) {
-    this.name = e.detail.value;
+  editButton(){
+    const button = document.getElementById("editEventBtn") as HTMLButtonElement;
+
+    if(this.selectedItems.length == 0){
+      this.isRowSelected = true;
+      this.dialogOpened = true;
+    
+    }else{
+      this.isRowSelected = false;
+      button.disabled;
+    }
   }
 
   onClickBack() {

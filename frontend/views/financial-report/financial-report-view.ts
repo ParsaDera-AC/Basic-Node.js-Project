@@ -30,7 +30,7 @@ export class FinancialReportView extends View {
   private reports: FinancialReport [] = [
     { title: "Tax slip", date: "2022-01-01", type: "T4" },
     { title: "Tax slip", date: "2021-01-01", type: "T4" },
-    { title: "Q1 Report", date: "2023-01-01", type: "Quarterly Fiscal" },
+    { title: "Q1 Report", date: "2023-01-01", type: "Quarterly Fiscal" }
   ];
   @state()
   private selectedItems: FinancialReport[] = [];
@@ -47,11 +47,6 @@ export class FinancialReportView extends View {
     .button-spacing{
       padding-left:480px;
     }
-    .user-space{
-      padding-bottom: 50px;
-      padding-left: 480px;
-
-    }
     .spacing{
       padding-left: 850px;
     }
@@ -59,13 +54,6 @@ export class FinancialReportView extends View {
 
 
     <vaadin-vertical-layout>
-    <span class="user-space">
-    
-        Username: Dave01
-        <br>
-        Name: Dave Chappelle
-        </span>
-
         <span class="table">
         <vaadin-grid
         .items="${this.reports}"
@@ -76,7 +64,7 @@ export class FinancialReportView extends View {
         }}"
       >
           <vaadin-grid-column header="Title" path="title"></vaadin-grid-column>
-          <vaadin-grid-column header="Date" path="date" ></vaadin-grid-column>
+          <vaadin-grid-sort-column header="Date" path="date" ></vaadin-grid-sort-column>
           <vaadin-grid-column header="Type" path="type"></vaadin-grid-column>
         </vaadin-grid>
         </span>

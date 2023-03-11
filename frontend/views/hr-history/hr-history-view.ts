@@ -26,11 +26,6 @@ export class HrHistoryView extends View {
       padding-left:480px;
       padding-bottom: 20px;
     }
-    .user-space{
-      padding-bottom: 50px;
-      padding-left: 480px;
-
-    }
     .spacing{
       padding-left: 1410px;
     }
@@ -38,12 +33,7 @@ export class HrHistoryView extends View {
 
 
     <vaadin-vertical-layout>
-    <span class="user-space">
-    
-        Username: Dave01
-        <br>
-        Name: Dave Chappelle
-        </span>
+
 
         <span class="table">
         <vaadin-grid
@@ -57,6 +47,7 @@ export class HrHistoryView extends View {
         <span class="spacing">
         <vaadin-button  @click="${this.onClickBack}">Back</vaadin-button>
         </vaadin-vertical-layout>
+        </span>
     `;
   }
 
