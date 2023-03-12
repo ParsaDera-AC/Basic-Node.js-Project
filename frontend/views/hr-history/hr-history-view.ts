@@ -11,11 +11,12 @@ export class HrHistoryView extends View {
   connectedCallback() {
     super.connectedCallback();
     this.classList.add('flex', 'p-m', 'gap-m', 'items-end');
+    this.prepareData();
   }
 
   private history: HumanResourcesHistory [] = [
-    { hireDate: "2003-01-02", reason:"Maternity leave", leaveDate:"2018-01-25"},
-    { hireDate: "2019-04-01", reason:"COVID-19", leaveDate:"2020-10-10"}
+    { hireDate: this.formatDate(new Date("2003/01/02")), reason:"Maternity leave", leaveDate:this.formatDate(new Date("2018/01/25"))},
+    { hireDate: this.formatDate(new Date("2019/04/01")), reason:"COVID-19", leaveDate:this.formatDate(new Date("2020/10/10"))}
   ];
 
   render() {
@@ -26,11 +27,6 @@ export class HrHistoryView extends View {
       padding-left:480px;
       padding-bottom: 20px;
     }
-    .user-space{
-      padding-bottom: 50px;
-      padding-left: 480px;
-
-    }
     .spacing{
       padding-left: 1410px;
     }
@@ -38,12 +34,7 @@ export class HrHistoryView extends View {
 
 
     <vaadin-vertical-layout>
-    <span class="user-space">
-    
-        Username: Dave01
-        <br>
-        Name: Dave Chappelle
-        </span>
+
 
         <span class="table">
         <vaadin-grid
@@ -57,10 +48,28 @@ export class HrHistoryView extends View {
         <span class="spacing">
         <vaadin-button  @click="${this.onClickBack}">Back</vaadin-button>
         </vaadin-vertical-layout>
+        </span>
     `;
   }
 
+  formatDate(date: Date): string {
+    return date.toISOString().substr(0, 10);
+  }
 
+  prepareData(){
+    this.history.sort((a, b) => {
+      const dateA = new Date(a.hireDate);
+      const dateB = new Date(b.hireDate);
+      if (dateA < dateB) {
+        return -1;
+      }
+      if (dateA > dateB) {
+        return 1;
+      }
+      return 0;
+    });
+
+  }
   onClickBack(){
     window.location.href = "/";
   }

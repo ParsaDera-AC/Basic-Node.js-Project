@@ -23,9 +23,8 @@ export class HomepageView extends View {
 </style>
     <div class="button-container-div">
       <vaadin-button class="buttonSpacer" @click="${this.onClickEvents}">Events</vaadin-button>
-      <vaadin-button class="buttonSpacer" @click="${this.onClickHrHistory}">HR History</vaadin-button>
+      <vaadin-button class="buttonSpacer" @click="${this.onClickHrHistory}">Human Resources History</vaadin-button>
       <vaadin-button class="buttonSpacer" @click="${this.onClickTrainingHistory}">Training History</vaadin-button>
-      <vaadin-button class="buttonSpacer" @click="${this.onClickAwards}">Awards</vaadin-button>
       <vaadin-button class="buttonSpacer" @click="${this.onClickFinacialReport}">Financial Report</vaadin-button>
     </div>
     `;
@@ -40,9 +39,6 @@ export class HomepageView extends View {
 
   onClickTrainingHistory() {
     window.location.href = "/TrainingHistory";
-  }
-  onClickAwards() {
-    window.location.href = "/Awards";
   }
   onClickFinacialReport() {
     window.location.href = "/FinancialReport";

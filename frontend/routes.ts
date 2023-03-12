@@ -1,6 +1,5 @@
 import type { Route } from '@vaadin/router';
 import './views/homepage/homepage';
-import './views/awards/awards-view';
 import './views/events/events-view';
 import './views/financial-report/financial-report-view';
 import './views/hr-history/hr-history-view';
@@ -26,11 +25,6 @@ export const views: ViewRoute[] = [
     title: 'Events',
   },
   {
-    path: 'Awards',
-    component: 'awards-view',
-    title: 'Awards',
-  },
-  {
     path: 'TrainingHistory',
     component: 'training-history-view',
     title: 'Training History',
@@ -38,7 +32,7 @@ export const views: ViewRoute[] = [
   {
     path: 'HrHistory',
     component: 'hr-history-view',
-    title: 'HR History',
+    title: 'Human Resources History',
   },
   {
     path: 'FinancialReport',
