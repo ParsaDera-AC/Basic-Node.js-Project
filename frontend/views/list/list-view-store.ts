@@ -1,5 +1,5 @@
-import Event from "Frontend/entity/Event";
-import EventModel from "Frontend/entity/EventModel";
+import Event from "Frontend/generated/com/example/application/data/entity/Event";
+import EventModel from "Frontend/generated/com/example/application/data/entity/EventModel";
 import { crmStore } from "Frontend/stores/app-store";
 import { makeAutoObservable, observable } from "mobx";
 

@@ -5,7 +5,7 @@ import '@vaadin/button';
 import '@vaadin/combo-box';
 import '@vaadin/text-field';
 import { Binder, field } from '@hilla/form';
-import EventModel from 'Frontend/entity/EventModel';
+import EventModel from 'Frontend/generated/com/example/application/data/entity/EventModel';
 import { crmStore } from 'Frontend/stores/app-store';
 import { listViewStore } from './list-view-store';
 

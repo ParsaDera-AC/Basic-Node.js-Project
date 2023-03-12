@@ -1,18 +1,21 @@
 package com.example.application.data.entity;
 
-
-import java.sql.Time;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
 public class Event extends AbstractEntity {
-
-    private Event event;
+    @ManyToOne
+    @JoinColumn(name = "eventmanager_id")
+    @NotNull
+    @JsonIgnoreProperties({"events"})
+    private EventManager eventManager;
 
     @NotEmpty
     private String eventName = "";
@@ -21,11 +24,9 @@ public class Event extends AbstractEntity {
     private String location = "";
 
     @NotNull
-    @NotEmpty
     private Date time;
 
     @NotNull
-    @NotEmpty
     private Date date;
 
     @Override
@@ -33,12 +34,12 @@ public class Event extends AbstractEntity {
         return eventName;
     }
 
-    public void setEvent(Event event){
-        this.event=event;
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
     }
 
-    public Event getEvent() {
-        return event;
+    public EventManager getEventManager() {
+        return eventManager;
     }
 
     public String getEventName() {
@@ -57,13 +58,11 @@ public class Event extends AbstractEntity {
         this.location = location;
     }
 
-   
-
     public Date getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 

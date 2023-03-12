@@ -1,11 +1,13 @@
 import { makeAutoObservable, observable, runInAction } from 'mobx';
 
-import Event from 'Frontend/entity/Event';
+import Event from 'Frontend/generated/com/example/application/data/entity/Event';
+import EventManager from 'Frontend/generated/com/example/application/data/entity/EventManager';
 import { CrmEndpoint } from 'Frontend/generated/endpoints';
 import { uiStore } from './app-store';
 
 export class CrmStore {
   events: Event[] = [];
+  eventManagers : EventManager[] = [];
 
   constructor() {
     makeAutoObservable(
