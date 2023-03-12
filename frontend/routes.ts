@@ -11,7 +11,7 @@ export const views: ViewRoute[] = [
   {
     path: '',
     component: 'list-view',
-    title: 'Contacts',
+    title: 'Events',
   },
   {
     path: 'dashboard',
