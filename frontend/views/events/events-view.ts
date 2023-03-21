@@ -23,7 +23,7 @@ import '@vaadin/grid/vaadin-grid-selection-column.js';
 @customElement('hello-world-view')
 export class HelloWorldView extends View {
   name = '';
-  
+
   @state()
   private today = '';
   @state()
@@ -32,7 +32,7 @@ export class HelloWorldView extends View {
   private dialogOpened = false;
   @state()
   private eventOptions = ['Event type 1', 'Event type 2', 'Event type 3', 'Event type 4'];
-  
+
   private items = [
     { event: 'Patrol', location: 'Ottawa, ON', date: '2023-02-24', time: '16:00' },
     { event: 'Course', location: 'Gatineau, QB', date: '2023-03-04', time: '12:00' },
@@ -63,94 +63,90 @@ export class HelloWorldView extends View {
 
   render() {
     return html`
-      <div id="user-info">
-      
-        Username: Dave01
-        <br>
-        Name: Dave Chappelle
-      
-        <vaadin-grid .items="${this.items}">
-          <vaadin-grid-selection-column></vaadin-grid-selection-column>
-          <vaadin-grid-column header="Event" path="event"></vaadin-grid-column>
-          <vaadin-grid-column header="Location" path="location"></vaadin-grid-column>
-          <vaadin-grid-column header="Date" path="date"></vaadin-grid-column>
-          <vaadin-grid-column header="Time" path="time"></vaadin-grid-column>
-        </vaadin-grid>
-      
-        <br>
-        <vaadin-dialog header-title="New Event" .opened="${this.dialogOpened}" @opened-changed="${(e: DialogOpenedChangedEvent) => (this.dialogOpened = e.detail.value)}"
-        ${dialogRenderer(this.renderDialog, [])}
-        ${dialogFooterRenderer(this.renderFooter, [])}
-      ></vaadin-dialog>
-      
-      <vaadin-button @click="${() => (this.dialogOpened = true)}">Create New Event</vaadin-button>
-      <vaadin-button @click="${() => (this.dialogOpened = true)}">Edit Event</vaadin-button>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      </div>  
+        <div id="user-info">
 
-     
+            Username: Dave01
+            <br>
+            Name: Dave Chappelle
+
+            <vaadin-grid .items="${this.items}">
+                <vaadin-grid-selection-column></vaadin-grid-selection-column>
+                <vaadin-grid-column header="Event" path="event"></vaadin-grid-column>
+                <vaadin-grid-column header="Location" path="location"></vaadin-grid-column>
+                <vaadin-grid-column header="Date" path="date"></vaadin-grid-column>
+                <vaadin-grid-column header="Time" path="time"></vaadin-grid-column>
+            </vaadin-grid>
+
+            <br>
+            <vaadin-dialog header-title="New Event" .opened="${this.dialogOpened}" @opened-changed="${(e: DialogOpenedChangedEvent) => (this.dialogOpened = e.detail.value)}"
+                           ${dialogRenderer(this.renderDialog, [])}
+                           ${dialogFooterRenderer(this.renderFooter, [])}
+            ></vaadin-dialog>
+
+            <vaadin-button @click="${() => (this.dialogOpened = true)}">Create New Event</vaadin-button>
+            <vaadin-button @click="${() => (this.dialogOpened = true)}">Edit Event</vaadin-button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+
+
     `;
   }
   private renderDialog = () => html`
-    <vaadin-vertical-layout style="align-items: stretch; width: 18rem; max-width: 100%;">
-      <vaadin-text-field label="Event name" ref="event"></vaadin-text-field>
-      <vaadin-email-field
-      label="Email address"
-      name="email"
-      value=""
-      error-message="Enter a valid email address"
-      clear-button-visible
-      invalid
-      ></vaadin-email-field>
-      <vaadin-date-picker
-        .min="${this.today}"
-        .max="${this.upperLimit}"
-        label="Appointment date"
-        ref="date"
-        error-message="Format must be MM/DD/YYYY"
-      ></vaadin-date-picker>
-      <vaadin-time-picker label="Time" value="07:00" ref="time"></vaadin-time-picker>
-      <vaadin-text-field label="Location" ref="location"></vaadin-text-field>
-      
-    </vaadin-vertical-layout>
+      <vaadin-vertical-layout style="align-items: stretch; width: 18rem; max-width: 100%;">
+          <vaadin-text-field id="event-name-field" label="Event name" ref="event"></vaadin-text-field>
+          <vaadin-email-field
+                  id="email-field"
+                  label="Email address"
+                  name="email"
+                  value=""
+                  error-message="Enter a valid email address"
+                  clear-button-visible
+                  invalid
+          ></vaadin-email-field>
+          <vaadin-date-picker
+                  id="date-field"
+                  .min="${this.today}"
+                  .max="${this.upperLimit}"
+                  label="Appointment date"
+                  ref="date"
+                  error-message="Format must be MM/DD/YYYY"
+          ></vaadin-date-picker>
+          <vaadin-time-picker id="time-field" label="Time" value="07:00" ref="time"></vaadin-time-picker>
+          <vaadin-text-field id="location-field" label="Location" ref="location"></vaadin-text-field>
+
+      </vaadin-vertical-layout>
   `;
-  
+
 
   private renderFooter = () => html`
-  <vaadin-button theme="primary" @click="${this.handleSubmit}">Submit</vaadin-button>
-  <vaadin-button @click="${this.close}">Cancel</vaadin-button>
-  
-`;
+      <vaadin-button theme="primary" @click="${this.handleSubmit}">Submit</vaadin-button>
+      <vaadin-button @click="${this.close}">Cancel</vaadin-button>
+
+  `;
 
 
-private handleSubmit = () => {
+  private handleSubmit = () => {
+    const eventName = (document.getElementById("event-name-field") as HTMLInputElement)?.value;
+    const location = (document.getElementById("location-field") as HTMLInputElement)?.value;
+    const date = (document.getElementById("date-field") as HTMLInputElement)?.value;
+    const time = (document.getElementById("time-field") as HTMLInputElement)?.value;
 
+    console.log(eventName, location, date, time);
 
-  const eventName = (this.shadowRoot?.querySelector("vaadin-text-field[label='Event name']") as HTMLInputElement)?.value;
-  const location = (this.shadowRoot?.querySelector("vaadin-text-field[label='Location']") as HTMLInputElement)?.value;
-  const date = (this.shadowRoot?.querySelector("vaadin-date-picker[label='Appointment date']") as HTMLInputElement)?.value;
-  const time = (this.shadowRoot?.querySelector("vaadin-time-picker[label='Time']") as HTMLInputElement)?.value;
+    if (eventName && location && date && time) {
+      console.log('Added event to list');
 
-  console.log(eventName && location && date && time)
-  
-  if (eventName && location && date && time) {
-    console.log("hi1")
-    this.items.push({ event: eventName, location: location, date: date, time: time });
+      this.items.push({ event: eventName, location: location, date: date, time: time });
+      this.dialogOpened = false;
+    } else {
+      // Show an error message or notification if any required field is missing
+    }
+    console.log(this.items);
+
     this.dialogOpened = false;
-    console.log("hi")
-  } else {
-    // Show an error message or notification if any required field is missing
   }
 
-  
-
-  this.dialogOpened = false;
-}
-
-
-
-
-private close() {
+  private close() {
     this.dialogOpened = false;
   }
 
