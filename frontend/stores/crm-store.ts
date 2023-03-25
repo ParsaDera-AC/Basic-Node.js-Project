@@ -3,7 +3,7 @@ import { makeAutoObservable, observable, runInAction } from 'mobx';
 import Company from 'Frontend/generated/com/example/application/data/entity/Company';
 import Contact from 'Frontend/generated/com/example/application/data/entity/Contact';
 import Status from 'Frontend/generated/com/example/application/data/entity/Status';
-import { CrmEndpoint, CrmEndpointEvent } from 'Frontend/generated/endpoints';
+import { CrmEndpoint } from 'Frontend/generated/endpoints';
 import { uiStore } from './app-store';
 
 export class CrmStore {
@@ -28,7 +28,6 @@ export class CrmStore {
 
   async initFromServer() {
     const data = await CrmEndpoint.getCrmData();
-    const data2 = await CrmEndpointEvent.getCrmData();
 
     runInAction(() => {
       this.contacts = data.contacts;
