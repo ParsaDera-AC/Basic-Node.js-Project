@@ -1,6 +1,6 @@
 
 export class Event {
-  eventId: number;
+  id: number;
     name: string;
     event: string;
     location: string;
@@ -8,8 +8,8 @@ export class Event {
     time: string;
     email: string;
   
-    constructor(eventId:number, name:string, event: string, location: string, date: string, time: string, email:string) {
-      this.eventId = eventId;
+    constructor(id:number, name:string, event: string, location: string, date: string, time: string, email:string) {
+      this.id = id;
       this.name = name;
       this.event = event;
       this.location = location;

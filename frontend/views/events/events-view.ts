@@ -23,10 +23,14 @@ import type { ConfirmDialogOpenedChangedEvent } from '@vaadin/confirm-dialog';
 import { GridActiveItemChangedEvent } from '@vaadin/vaadin-grid/vaadin-grid';
 import '@vaadin/notification';
 import { Notification } from '@vaadin/notification';
+import * as EventsEndpoint from 'Frontend/generated/EventsEndpoint';
 
 @customElement('events-view')
 export class EventsView extends View {
-  name = '';
+ @state()
+ private isModify = false;
+ @state()
+ private isDeleting = false;
   @state()
   private confirmDialogOpened = false;
   @state()
@@ -44,12 +48,15 @@ export class EventsView extends View {
 
   private isRowSelected = false;
   private titleHeader = "";
-  private items: Event[] = [
-    
-    { eventId: 1, name: "CPR Training", event: this.eventOptions[1], location: 'Ottawa, ON', date: this.formatDate(new Date('2023/04/12')), time: '07:00', email: "test@gmail.com" },
-    {eventId:2, name:"Calaboge Peaks", event: this.eventOptions[0], location: 'Calabogie, ON', date: this.formatDate(new Date('2023/10/02')), time: '16:00', email: "test@gmail.com"  },
-  ];
+  private items: Event[] = [];
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.classList.add('flex', 'p-m', 'gap-m', 'items-end');
+    this.retrieveAllEvents();
+    this.prepareData();
+
+  }
 
   async firstUpdated() {
     this.today = formatISO(Date.now(), { representation: 'date' });
@@ -57,15 +64,28 @@ export class EventsView extends View {
     this.upperLimit = formatISO(upperLimit, { representation: 'date' });
   }
 
-
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.classList.add('flex', 'p-m', 'gap-m', 'items-end');
-    this.prepareData();
-    
+  async retrieveAllEvents() {
+    const serverResponse = await EventsEndpoint.retrieveAllEvents();
+    console.log(serverResponse);
+    this.items = serverResponse as Event[];
+  }
+  
+  async addEvent() {
+    const serverResponse = await EventsEndpoint.retrieveAllEvents();
+    console.log(serverResponse);
     
   }
+  async editEvent() {
+    const serverResponse = await EventsEndpoint.retrieveAllEvents();
+    console.log(serverResponse);
+  
+  }
+  async deleteEvent() {
+    const serverResponse = await EventsEndpoint.retrieveAllEvents();
+    console.log(serverResponse);
+    
+  }
+
 
   render() {
 
@@ -173,7 +193,19 @@ export class EventsView extends View {
   <vaadin-button @click="${this.close}">Cancel</vaadin-button>
   
 `;
+  populateEvent(){
+    const event = {
+      id: 1,
+      name: "",
+      event: "",
+      location: "",
+      date: "",
+      time: "",
+      email: "",
 
+    }
+    return event;
+  }
   openedChanged(e: ConfirmDialogOpenedChangedEvent) {
     this.confirmDialogOpened = e.detail.value;
     if (this.confirmDialogOpened) {
@@ -183,6 +215,15 @@ export class EventsView extends View {
     }
   }
 
+  onClickSubmit(){
+    if(this.isDeleting == true){
+      this.deleteEvent();
+    }else if(this.isModify){
+      this.addEvent();
+    }else if(!this.isModify){
+      this.editEvent();
+    }
+  }
   private close() {
     this.dialogOpened = false;
     this.selectedItems = [];
