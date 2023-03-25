@@ -18,12 +18,13 @@ public class eventsRepository {
    public void addEvents(Events eventRqst) {
 
       Events newEvent = new Events();
-      newEvent.setId(id);
+      newEvent.setId(eventRqst.getId() + id);
       newEvent.setName(eventRqst.getName());
       newEvent.setEmail(eventRqst.getEmail());
       newEvent.setDate(eventRqst.getDate().toString());
       newEvent.setLocation(eventRqst.getLocation());
       newEvent.setTime(eventRqst.getTime().toString());
+      newEvent.setEvent(eventRqst.getEvent());
       eventsList.add(newEvent);
       id++;
 
@@ -39,6 +40,7 @@ public class eventsRepository {
             eventsList.get(i).setDate(eventRqst.getDate().toString());
             eventsList.get(i).setLocation(eventRqst.getLocation());
             eventsList.get(i).setTime(eventRqst.getTime().toString());
+            eventsList.get(i).setEvent(eventRqst.getEvent());
          }
       }
    }

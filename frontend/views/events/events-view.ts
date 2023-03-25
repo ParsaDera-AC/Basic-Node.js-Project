@@ -27,10 +27,8 @@ import * as EventsEndpoint from 'Frontend/generated/EventsEndpoint';
 
 @customElement('events-view')
 export class EventsView extends View {
- @state()
- private isModify = false;
- @state()
- private isDeleting = false;
+  @state()
+  private isModify = false;
   @state()
   private confirmDialogOpened = false;
   @state()
@@ -82,7 +80,7 @@ export class EventsView extends View {
 
   }
   async deleteEvent() {
-    const id = this.selectedItems[0].id
+    const id = this.selectedItems[0]?.id
     EventsEndpoint.deleteEvent(id);
     
   }
@@ -195,15 +193,17 @@ export class EventsView extends View {
   
 `;
   populateEvent(){
+    var id = this.selectedItems[0]?.id;
     var eventName = document.getElementById("eventName") as HTMLFormElement;
     var email = document.getElementById("email") as HTMLFormElement;
     var location = document.getElementById("location") as HTMLFormElement;
     var date = document.getElementById("date") as HTMLFormElement;
     var time = document.getElementById("time") as HTMLFormElement;
     var eventType = document.getElementById("eventType") as HTMLFormElement;
-  
+
+    if(this.isModify == false){
     const event = {
-      
+      id: 0, //just to get the rqst through
       name: eventName.value,
       event: eventType.value,
       location: location.value,
@@ -213,6 +213,19 @@ export class EventsView extends View {
 
     }
     return event as Event;
+  }else{
+    const event = {
+      id: id,
+      name: eventName.value,
+      event: eventType.value,
+      location: location.value,
+      date: date.value,
+      time: time.value,
+      email: email.value,
+
+    }
+    return event as Event;
+  }
 
   }
     
@@ -227,9 +240,9 @@ export class EventsView extends View {
   }
 
   onClickSubmit(){
-    if(this.isModify == true){
+    if(this.isModify == false){
       this.addEvent();
-    }else if(this.isModify == false){
+    }else if(this.isModify == true){
       this.editEvent();
     }
     this.close();
@@ -241,6 +254,7 @@ export class EventsView extends View {
     this.close();
     this.refresh();
   }
+
   private close() {
     this.dialogOpened = false;
     this.selectedItems = [];
@@ -251,7 +265,7 @@ export class EventsView extends View {
     if(this.selectedItems.length == 0){
       this.dialogOpened = true;
       this.titleHeader ="New Event";
-      this.isModify = true;
+      this.isModify = false;
       
     }else{
 
@@ -269,8 +283,7 @@ export class EventsView extends View {
       this.isRowSelected = false;
       button.disabled;
       Notification.show("Select a entry from the table before editing your event.", {position:"top-center", duration:3000, theme:"error"});
-      this.isModify = false;
-    
+          
     }else{
       this.isRowSelected = true;
       this.dialogOpened = true;
@@ -316,7 +329,6 @@ export class EventsView extends View {
     });
 
   }
-
 
   onClickBack() {
     window.location.href = "/";
