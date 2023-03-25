@@ -12,25 +12,6 @@ public class eventsRepository {
 
    }
    public List<Events> getAllEvents() {
-      Events event = new Events();
-      event.setId(1);
-      event.setName("Patrol");
-      event.setDate("2023-02-01");
-      event.setEmail("test@gmail.com");
-      event.setLocation("Ottawa, ON");
-      event.setTime("01:00");
-      event.setEvent("Patrolling");
-      eventsList.add(event);
-
-      Events events = new Events();
-      event.setId(2);
-      event.setName("Patrol");
-      event.setDate("2023-02-01");
-      event.setEmail("test@gmail.com");
-      event.setLocation("Ottawa, ON");
-      event.setTime("01:00");
-      event.setEvent("Patrolling");
-      eventsList.add(events);
       return eventsList;
    }
 
@@ -62,10 +43,10 @@ public class eventsRepository {
       }
    }
 
-   public void deleteEvent(Events eventRqst){
+   public void deleteEvent(int id){
 
       for (int i = 0; i < eventsList.size(); i++) {
-         if (eventRqst.getId() == eventsList.get(i).getId()) {
+         if (id == eventsList.get(i).getId()) {
             eventsList.remove(i);
          }
       }

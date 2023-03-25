@@ -29,7 +29,7 @@ public class eventsEndpoint {
         eventsRepo.editEvent(event);
     }
 
-    public void deleteEvent(Events event){
-        eventsRepo.deleteEvent(event);
+    public void deleteEvent(int id){
+        eventsRepo.deleteEvent(id);
     }
 }
