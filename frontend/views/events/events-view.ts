@@ -23,10 +23,12 @@ import type { ConfirmDialogOpenedChangedEvent } from '@vaadin/confirm-dialog';
 import { GridActiveItemChangedEvent } from '@vaadin/vaadin-grid/vaadin-grid';
 import '@vaadin/notification';
 import { Notification } from '@vaadin/notification';
+import * as EventsEndpoint from 'Frontend/generated/EventsEndpoint';
 
 @customElement('events-view')
 export class EventsView extends View {
-  name = '';
+  @state()
+  private isModify = false;
   @state()
   private confirmDialogOpened = false;
   @state()
@@ -44,12 +46,14 @@ export class EventsView extends View {
 
   private isRowSelected = false;
   private titleHeader = "";
-  private items: Event[] = [
-    
-    { eventId: 1, name: "CPR Training", event: this.eventOptions[1], location: 'Ottawa, ON', date: this.formatDate(new Date('2023/04/12')), time: '07:00', email: "test@gmail.com" },
-    {eventId:2, name:"Calaboge Peaks", event: this.eventOptions[0], location: 'Calabogie, ON', date: this.formatDate(new Date('2023/10/02')), time: '16:00', email: "test@gmail.com"  },
-  ];
+  private items: Event[] = [];
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.classList.add('flex', 'p-m', 'gap-m', 'items-end');
+    this.prepareData();
+
+  }
 
   async firstUpdated() {
     this.today = formatISO(Date.now(), { representation: 'date' });
@@ -57,15 +61,30 @@ export class EventsView extends View {
     this.upperLimit = formatISO(upperLimit, { representation: 'date' });
   }
 
-
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.classList.add('flex', 'p-m', 'gap-m', 'items-end');
-    this.prepareData();
-    
+  async retrieveAllEvents() {
+    const serverResponse = await EventsEndpoint.retrieveAllEvents();
+    this.items = serverResponse as Event[];
+    console.log(serverResponse);
+    //This just triggers the table inputs
+    this.close();
+  }
+  
+  async addEvent() {
+    const event = this.populateEvent();
+    EventsEndpoint.addEvents(event);
     
   }
+  async editEvent() {
+    const event = this.populateEvent();
+    EventsEndpoint.editEvents(event);
+
+  }
+  async deleteEvent() {
+    const id = this.selectedItems[0]?.id
+    EventsEndpoint.deleteEvent(id);
+    
+  }
+
 
   render() {
 
@@ -115,7 +134,7 @@ export class EventsView extends View {
       cancel
       @cancel="${() => (this.status = 'Canceled')}"
       confirm-text="Delete"
-      @confirm="${() => (this.status = 'Saved')}"
+      @confirm="${this.onClickDelete}"
       .opened="${this.confirmDialogOpened}"
       @opened-changed="${this.openedChanged}">
       Are you sure you want to delete this event?
@@ -139,8 +158,8 @@ export class EventsView extends View {
 
   private renderDialog = () => html`
     <vaadin-vertical-layout style="align-items: stretch; width: 18rem; max-width: 100%;">
-      <vaadin-text-field label="Event name" value="${this.selectedItems.length > 0 ? this.selectedItems[0].name : ''}"></vaadin-text-field>
-      <vaadin-email-field
+      <vaadin-text-field id = "eventName" label="Event name" value="${this.selectedItems.length > 0 ? this.selectedItems[0].name : ''}"></vaadin-text-field>
+      <vaadin-email-field id = "email"
       label="Email address"
       name="email"
       value="${this.selectedItems.length > 0 ? this.selectedItems[0].email : ''}"
@@ -148,7 +167,7 @@ export class EventsView extends View {
       clear-button-visible
       invalid
      ></vaadin-email-field>
-      <vaadin-date-picker .value="${this.selectedItems.length > 0 ? this.selectedItems[0].date  : ''}" .valueMapper="${(value: string | null) => {
+      <vaadin-date-picker id = "date" .value="${this.selectedItems.length > 0 ? this.selectedItems[0].date  : ''}" .valueMapper="${(value: string | null) => {
         return value ? new Date(value).toISOString().substr(0, 10) : null;
       }}" 
         .min="${this.today}"
@@ -156,10 +175,10 @@ export class EventsView extends View {
         label="Appointment date"
         error-message="Format is Month/Day/Year"
       ></vaadin-date-picker>
-      <vaadin-time-picker label="Time" value="${this.selectedItems.length > 0 ? this.selectedItems[0].time : ''}"></vaadin-time-picker>
-      <vaadin-text-field label="Location" value="${this.selectedItems.length > 0 ? this.selectedItems[0].location: ''}"></vaadin-text-field>
+      <vaadin-time-picker id = "time" label="Time" value="${this.selectedItems.length > 0 ? this.selectedItems[0].time : ''}"></vaadin-time-picker>
+      <vaadin-text-field id="location" label="Location" value="${this.selectedItems.length > 0 ? this.selectedItems[0].location: ''}"></vaadin-text-field>
       <vaadin-combo-box
-      label="Event type"
+      id = "eventType" label="Event type"
       item-label-path="name"
       item-value-path="id"
       .items="${this.eventOptions}"
@@ -169,11 +188,48 @@ export class EventsView extends View {
   `;
 
   private renderFooter = () => html`
-  <vaadin-button theme="primary" @click="${this.close}">Submit</vaadin-button>
+  <vaadin-button theme="primary" @click="${this.onClickSubmit}">Submit</vaadin-button>
   <vaadin-button @click="${this.close}">Cancel</vaadin-button>
   
 `;
+  populateEvent(){
+    var id = this.selectedItems[0]?.id;
+    var eventName = document.getElementById("eventName") as HTMLFormElement;
+    var email = document.getElementById("email") as HTMLFormElement;
+    var location = document.getElementById("location") as HTMLFormElement;
+    var date = document.getElementById("date") as HTMLFormElement;
+    var time = document.getElementById("time") as HTMLFormElement;
+    var eventType = document.getElementById("eventType") as HTMLFormElement;
 
+    if(this.isModify == false){
+    const event = {
+      id: 0, //just to get the rqst through
+      name: eventName.value,
+      event: eventType.value,
+      location: location.value,
+      date: date.value,
+      time: time.value,
+      email: email.value,
+
+    }
+    return event as Event;
+  }else{
+    const event = {
+      id: id,
+      name: eventName.value,
+      event: eventType.value,
+      location: location.value,
+      date: date.value,
+      time: time.value,
+      email: email.value,
+
+    }
+    return event as Event;
+  }
+
+  }
+    
+  
   openedChanged(e: ConfirmDialogOpenedChangedEvent) {
     this.confirmDialogOpened = e.detail.value;
     if (this.confirmDialogOpened) {
@@ -181,6 +237,22 @@ export class EventsView extends View {
     }else{
       this.selectedItems = [];
     }
+  }
+
+  onClickSubmit(){
+    if(this.isModify == false){
+      this.addEvent();
+    }else if(this.isModify == true){
+      this.editEvent();
+    }
+    this.close();
+    this.refresh();
+  }
+
+  onClickDelete(){
+    this.deleteEvent();
+    this.close();
+    this.refresh();
   }
 
   private close() {
@@ -193,6 +265,8 @@ export class EventsView extends View {
     if(this.selectedItems.length == 0){
       this.dialogOpened = true;
       this.titleHeader ="New Event";
+      this.isModify = false;
+      
     }else{
 
       button.disabled;
@@ -209,13 +283,12 @@ export class EventsView extends View {
       this.isRowSelected = false;
       button.disabled;
       Notification.show("Select a entry from the table before editing your event.", {position:"top-center", duration:3000, theme:"error"});
-    
+          
     }else{
       this.isRowSelected = true;
       this.dialogOpened = true;
       this.titleHeader ="Edit Event";
-      
-      
+      this.isModify = true;
     }
 
   }
@@ -242,6 +315,7 @@ export class EventsView extends View {
   }
 
   prepareData(){
+  this.retrieveAllEvents();
     this.items.sort((a, b) => {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
@@ -256,9 +330,12 @@ export class EventsView extends View {
 
   }
 
-
   onClickBack() {
     window.location.href = "/";
+  }
+
+  refresh(){
+    window.location.reload();
   }
 
 }
