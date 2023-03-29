@@ -24,6 +24,7 @@ import { GridActiveItemChangedEvent } from '@vaadin/vaadin-grid/vaadin-grid';
 import '@vaadin/notification';
 import { Notification } from '@vaadin/notification';
 import * as EventsEndpoint from 'Frontend/generated/EventsEndpoint';
+import { EndpointValidationError } from '@hilla/frontend';
 
 @customElement('events-view')
 export class EventsView extends View {
@@ -64,35 +65,80 @@ export class EventsView extends View {
   }
 
   async retrieveAllEvents() {
-    const serverResponse = await EventsEndpoint.retrieveAllEvents();
-    this.items = serverResponse as Event[];
-    console.log(serverResponse);
-    //This just triggers the table inputs
-    this.close();
+
+    try {
+      const serverResponse = await EventsEndpoint.retrieveAllEvents();
+      this.items = serverResponse as Event[];
+      //This just triggers the table inputs
+      this.close();
+    } catch (error) {
+      if (error instanceof EndpointValidationError) {
+        (error as EndpointValidationError).validationErrorData.forEach(
+          ({ message }) => {
+            console.warn(message);
+          }
+        );
+      }
+    }
+
   }
-  
+
   async addEvent() {
-    const event = this.populateEvent();
-    if (event.date!=""&&event.name!=""&&event.time!=""&&event.location!="") {
-      EventsEndpoint.addEvents(event);
-      this.isValid = true;
-    }else{
-      this.isValid = false;
+
+    try {
+      const event = this.populateEvent();
+      if (event.date != "" && event.name != "" && event.time != "" && event.location != "") {
+        EventsEndpoint.addEvents(event);
+        this.isValid = true;
+      } else {
+        this.isValid = false;
+      }
+    } catch (error) {
+      if (error instanceof EndpointValidationError) {
+        (error as EndpointValidationError).validationErrorData.forEach(
+          ({ message }) => {
+            console.warn(message); // "Unable to deserialize an endpoint method parameter into type 'java.time.LocalDate'"
+          }
+        );
+      }
     }
   }
+
   async editEvent() {
     const event = this.populateEvent();
-    if (event.date!=""&&event.name!=""&&event.time!=""&&event.location!="") {
-      EventsEndpoint.editEvents(event);
-      this.isValid = true;
-    }else{
-      this.isValid = false;
+    try {
+      if (event.date != "" && event.name != "" && event.time != "" && event.location != "") {
+        EventsEndpoint.editEvents(event);
+        this.isValid = true;
+      } else {
+        this.isValid = false;
+      }
+    } catch (error) {
+      if (error instanceof EndpointValidationError) {
+        (error as EndpointValidationError).validationErrorData.forEach(
+          ({ message }) => {
+            console.warn(message); // "Unable to deserialize an endpoint method parameter into type 'java.time.LocalDate'"
+          }
+        );
+      }
     }
+
   }
+  
   async deleteEvent() {
-    const id = this.selectedItems[0]?.id
-    EventsEndpoint.deleteEvent(id);
-    
+
+    try {
+      const id = this.selectedItems[0]?.id
+      EventsEndpoint.deleteEvent(id);
+    } catch (error) {
+      if (error instanceof EndpointValidationError) {
+        (error as EndpointValidationError).validationErrorData.forEach(
+          ({ message }) => {
+            console.warn(message); // "Unable to deserialize an endpoint method parameter into type 'java.time.LocalDate'"
+          }
+        );
+      }
+    }
   }
 
 
@@ -177,16 +223,16 @@ export class EventsView extends View {
       clear-button-visible
       invalid
      ></vaadin-email-field>
-      <vaadin-date-picker required id = "date" .value="${this.selectedItems.length > 0 ? this.selectedItems[0].date  : ''}" .valueMapper="${(value: string | null) => {
-        return value ? new Date(value).toISOString().substr(0, 10) : null;
-      }}" 
+      <vaadin-date-picker required id = "date" .value="${this.selectedItems.length > 0 ? this.selectedItems[0].date : ''}" .valueMapper="${(value: string | null) => {
+      return value ? new Date(value).toISOString().substr(0, 10) : null;
+    }}" 
         .min="${this.today}"
         .max="${this.upperLimit}"
         label="Appointment date"
         error-message="Format is Month/Day/Year"
       ></vaadin-date-picker>
       <vaadin-time-picker required id = "time" label="Time" value="${this.selectedItems.length > 0 ? this.selectedItems[0].time : ''}"></vaadin-time-picker>
-      <vaadin-text-field required id="location" label="Location" value="${this.selectedItems.length > 0 ? this.selectedItems[0].location: ''}"></vaadin-text-field>
+      <vaadin-text-field required id="location" label="Location" value="${this.selectedItems.length > 0 ? this.selectedItems[0].location : ''}"></vaadin-text-field>
       <vaadin-combo-box
       id = "eventType" label="Event type"
       item-label-path="name"
@@ -202,7 +248,7 @@ export class EventsView extends View {
   <vaadin-button @click="${this.close}">Cancel</vaadin-button>
   
 `;
-  populateEvent(){
+  populateEvent() {
     var id = this.selectedItems[0]?.id;
     var eventName = document.getElementById("eventName") as HTMLFormElement;
     var email = document.getElementById("email") as HTMLFormElement;
@@ -211,65 +257,65 @@ export class EventsView extends View {
     var time = document.getElementById("time") as HTMLFormElement;
     var eventType = document.getElementById("eventType") as HTMLFormElement;
 
-    if(this.isModify == false){
-    const event = {
-      id: 0, //just to get the rqst through
-      name: eventName.value,
-      event: eventType.value,
-      location: location.value,
-      date: date.value,
-      time: time.value,
-      email: email.value,
+    if (this.isModify == false) {
+      const event = {
+        id: 0, //just to get the rqst through
+        name: eventName.value,
+        event: eventType.value,
+        location: location.value,
+        date: date.value,
+        time: time.value,
+        email: email.value,
 
-    }
-    return event as Event;
-  }else{
-    const event = {
-      id: id,
-      name: eventName.value,
-      event: eventType.value,
-      location: location.value,
-      date: date.value,
-      time: time.value,
-      email: email.value,
+      }
+      return event as Event;
+    } else {
+      const event = {
+        id: id,
+        name: eventName.value,
+        event: eventType.value,
+        location: location.value,
+        date: date.value,
+        time: time.value,
+        email: email.value,
 
+      }
+      return event as Event;
     }
-    return event as Event;
+
   }
 
-  }
-    
-  
+
   openedChanged(e: ConfirmDialogOpenedChangedEvent) {
     this.confirmDialogOpened = e.detail.value;
     if (this.confirmDialogOpened) {
       this.status = '';
-    }else{
+    } else {
       this.selectedItems = [];
     }
   }
 
-  onClickSubmit(){
-    if(this.isModify == false){
+  onClickSubmit() {
+    if (this.isModify == false) {
       this.addEvent();
-      if (this.isValid==true) {
+      if (this.isValid == true) {
         this.close();
         this.refresh();
-      }else{
-        Notification.show("Please fill the the required fields.", {position:"top-center", duration:3000, theme:"error"});
+      } else {
+        Notification.show("Please fill the the required fields.", { position: "top-center", duration: 3000, theme: "error" });
       }
-    }else if(this.isModify == true){
+    } else if (this.isModify == true) {
       this.editEvent();
-      if (this.isValid==true) {
+      if (this.isValid == true) {
         this.close();
         this.refresh();
-      }else{
-        Notification.show("Please fill the the required fields.", {position:"top-center", duration:3000, theme:"error"});
+      } else {
+        Notification.show("Please fill the the required fields.", { position: "top-center", duration: 3000, theme: "error" });
       }
     }
   }
 
-  onClickDelete(){
+  onClickDelete() {
     this.deleteEvent();
     this.close();
     this.refresh();
@@ -280,52 +326,52 @@ export class EventsView extends View {
     this.selectedItems = [];
   }
 
-  newButton(){
+  newButton() {
     const button = document.getElementById("newEventBtn") as HTMLButtonElement;
-    if(this.selectedItems.length == 0){
+    if (this.selectedItems.length == 0) {
       this.dialogOpened = true;
-      this.titleHeader ="New Event";
+      this.titleHeader = "New Event";
       this.isModify = false;
-      
-    }else{
+
+    } else {
 
       button.disabled;
-      Notification.show("Deselect a entry from the table before creating a new event.", {position:"top-center", duration:3000, theme:"error"});
-      
+      Notification.show("Deselect a entry from the table before creating a new event.", { position: "top-center", duration: 3000, theme: "error" });
+
     }
 
   }
 
-  editButton(){
+  editButton() {
     const button = document.getElementById("editEventBtn") as HTMLButtonElement;
 
-    if(this.selectedItems.length == 0){
+    if (this.selectedItems.length == 0) {
       this.isRowSelected = false;
       button.disabled;
-      Notification.show("Select a entry from the table before editing your event.", {position:"top-center", duration:3000, theme:"error"});
-          
-    }else{
+      Notification.show("Select a entry from the table before editing your event.", { position: "top-center", duration: 3000, theme: "error" });
+
+    } else {
       this.isRowSelected = true;
       this.dialogOpened = true;
-      this.titleHeader ="Edit Event";
+      this.titleHeader = "Edit Event";
       this.isModify = true;
     }
 
   }
 
-  deleteButton(){
+  deleteButton() {
     const button = document.getElementById("deleteEventBtn") as HTMLButtonElement;
 
-    if(this.selectedItems.length == 0){
+    if (this.selectedItems.length == 0) {
       this.isRowSelected = false;
       button.disabled;
-      Notification.show("Select a entry from the table before deleting your event.", {position:"top-center", duration:3000, theme:"error"});
-      
-    
-    }else{
+      Notification.show("Select a entry from the table before deleting your event.", { position: "top-center", duration: 3000, theme: "error" });
+
+
+    } else {
       this.isRowSelected = true;
       this.confirmDialogOpened = true
-      
+
     }
 
   }
@@ -334,8 +380,8 @@ export class EventsView extends View {
     return date.toISOString().substr(0, 10);
   }
 
-  prepareData(){
-  this.retrieveAllEvents();
+  prepareData() {
+    this.retrieveAllEvents();
     this.items.sort((a, b) => {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
@@ -354,7 +400,7 @@ export class EventsView extends View {
     window.location.href = "/";
   }
 
-  refresh(){
+  refresh() {
     window.location.reload();
   }
 
