@@ -43,6 +43,8 @@ export class EventsView extends View {
   private eventOptions = ['Patrol', 'Training', 'Workshop'];
   @state()
   private selectedItems: Event[] = [];
+  @state()
+  private isValid = false;
 
   private isRowSelected = false;
   private titleHeader = "";
@@ -71,13 +73,21 @@ export class EventsView extends View {
   
   async addEvent() {
     const event = this.populateEvent();
-    EventsEndpoint.addEvents(event);
-    
+    if (event.date!=""&&event.name!=""&&event.time!=""&&event.location!="") {
+      EventsEndpoint.addEvents(event);
+      this.isValid = true;
+    }else{
+      this.isValid = false;
+    }
   }
   async editEvent() {
     const event = this.populateEvent();
-    EventsEndpoint.editEvents(event);
-
+    if (event.date!=""&&event.name!=""&&event.time!=""&&event.location!="") {
+      EventsEndpoint.editEvents(event);
+      this.isValid = true;
+    }else{
+      this.isValid = false;
+    }
   }
   async deleteEvent() {
     const id = this.selectedItems[0]?.id
@@ -158,7 +168,7 @@ export class EventsView extends View {
 
   private renderDialog = () => html`
     <vaadin-vertical-layout style="align-items: stretch; width: 18rem; max-width: 100%;">
-      <vaadin-text-field id = "eventName" label="Event name" value="${this.selectedItems.length > 0 ? this.selectedItems[0].name : ''}"></vaadin-text-field>
+      <vaadin-text-field id = "eventName" required label="Event name" value="${this.selectedItems.length > 0 ? this.selectedItems[0].name : ''}"></vaadin-text-field>
       <vaadin-email-field id = "email"
       label="Email address"
       name="email"
@@ -167,7 +177,7 @@ export class EventsView extends View {
       clear-button-visible
       invalid
      ></vaadin-email-field>
-      <vaadin-date-picker id = "date" .value="${this.selectedItems.length > 0 ? this.selectedItems[0].date  : ''}" .valueMapper="${(value: string | null) => {
+      <vaadin-date-picker required id = "date" .value="${this.selectedItems.length > 0 ? this.selectedItems[0].date  : ''}" .valueMapper="${(value: string | null) => {
         return value ? new Date(value).toISOString().substr(0, 10) : null;
       }}" 
         .min="${this.today}"
@@ -175,8 +185,8 @@ export class EventsView extends View {
         label="Appointment date"
         error-message="Format is Month/Day/Year"
       ></vaadin-date-picker>
-      <vaadin-time-picker id = "time" label="Time" value="${this.selectedItems.length > 0 ? this.selectedItems[0].time : ''}"></vaadin-time-picker>
-      <vaadin-text-field id="location" label="Location" value="${this.selectedItems.length > 0 ? this.selectedItems[0].location: ''}"></vaadin-text-field>
+      <vaadin-time-picker required id = "time" label="Time" value="${this.selectedItems.length > 0 ? this.selectedItems[0].time : ''}"></vaadin-time-picker>
+      <vaadin-text-field required id="location" label="Location" value="${this.selectedItems.length > 0 ? this.selectedItems[0].location: ''}"></vaadin-text-field>
       <vaadin-combo-box
       id = "eventType" label="Event type"
       item-label-path="name"
@@ -242,11 +252,21 @@ export class EventsView extends View {
   onClickSubmit(){
     if(this.isModify == false){
       this.addEvent();
+      if (this.isValid==true) {
+        this.close();
+        this.refresh();
+      }else{
+        Notification.show("Please fill the the required fields.", {position:"top-center", duration:3000, theme:"error"});
+      }
     }else if(this.isModify == true){
       this.editEvent();
+      if (this.isValid==true) {
+        this.close();
+        this.refresh();
+      }else{
+        Notification.show("Please fill the the required fields.", {position:"top-center", duration:3000, theme:"error"});
+      }
     }
-    this.close();
-    this.refresh();
   }
 
   onClickDelete(){
