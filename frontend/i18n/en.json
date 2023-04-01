@@ -1,0 +1,12 @@
+{
+    "event_name": "Event Name",
+    "event_type": "Event Type",
+    "event_location": "Location",
+    "event_date": "Date",
+    "event_time": "Time",
+    "event_confirmation": "Event Confirmation",
+    "createEvent": "Create Event",
+    "editEvent": "Edit Event",
+    "deleteEvent": "Delete Event"
+}
+

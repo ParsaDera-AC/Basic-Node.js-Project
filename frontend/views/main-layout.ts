@@ -15,13 +15,14 @@ import { router } from '../index';
 import { views } from '../routes';
 import { appStore } from '../stores/app-store';
 import { Layout } from './view';
+import { use } from 'lit-translate';
+import { ComboBoxValueChangedEvent } from '@vaadin/vaadin-combo-box';
 
 interface RouteInfo {
   path: string;
   title: string;
   icon: string;
 }
-
 @customElement('main-layout')
 export class MainLayout extends Layout {
   render() {
@@ -33,9 +34,23 @@ export class MainLayout extends Layout {
     </style>
       <vaadin-app-layout primary-section="drawer">
         <h1>${appStore.currentViewTitle}</h1>
+        <div style="margin-left: 85%;" slot="navbar"> <!-- Replace my-element with div -->
+          <vaadin-combo-box
+            label="Select language"
+            .items="${[{ value: 'en', label: 'English' }, { value: 'fr', label: 'French' }]}"
+            item-value-path="value"
+            item-label-path="label"
+            @value-changed="${this.onLanguageChanged}"
+          ></vaadin-combo-box>
+        </div>
         <slot></slot>
       </vaadin-app-layout>
     `;
+  }
+
+  onLanguageChanged(event: ComboBoxValueChangedEvent) {
+    const language = event.detail.value;
+    use(language);
   }
 
   connectedCallback() {

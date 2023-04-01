@@ -25,6 +25,7 @@ import '@vaadin/notification';
 import { Notification } from '@vaadin/notification';
 import * as EventsEndpoint from 'Frontend/generated/EventsEndpoint';
 import { EndpointValidationError } from '@hilla/frontend';
+import { translate } from 'lit-translate';
 
 @customElement('events-view')
 export class EventsView extends View {
@@ -171,11 +172,11 @@ export class EventsView extends View {
         this.isRowSelected = Boolean(item);
       }}"
       >
-        <vaadin-grid-sort-column header="Event Name" path="name"></vaadin-grid-sort-column>
-          <vaadin-grid-sort-column header="Event Type" path="event"></vaadin-grid-sort-column>
-          <vaadin-grid-column header="Location" path="location"></vaadin-grid-column>
-          <vaadin-grid-sort-column header="Date" path="date"></vaadin-grid-sort-column>
-          <vaadin-grid-column header="Time" path="time"></vaadin-grid-column>
+        <vaadin-grid-sort-column header="${translate('event_name')}" path="name"></vaadin-grid-sort-column>
+          <vaadin-grid-sort-column header="${translate('event_type')}" path="event"></vaadin-grid-sort-column>
+          <vaadin-grid-column header="${translate('event_location')}" path="location"></vaadin-grid-column>
+          <vaadin-grid-sort-column header="${translate('event_date')}" path="date"></vaadin-grid-sort-column>
+          <vaadin-grid-column header="${translate('event_time')}" path="time"></vaadin-grid-column>
         </vaadin-grid>
     </span>
 
@@ -198,9 +199,9 @@ export class EventsView extends View {
 
     <vaadin-horizontal-layout>
     <span class="button-spacing">
-      <vaadin-button id="newEventBtn" @click="${this.newButton}">Create New Event</vaadin-button>
-      <vaadin-button id="editEventBtn" @click="${this.editButton}">Edit Event</vaadin-button>
-      <vaadin-button id="deleteEventBtn" @click="${this.deleteButton}">Delete Event</vaadin-button>
+      <vaadin-button id="newEventBtn" @click="${this.newButton}">${translate('createEvent')}</vaadin-button>
+      <vaadin-button id="editEventBtn" @click="${this.editButton}">${translate('editEvent')}</vaadin-button>
+      <vaadin-button id="deleteEventBtn" @click="${this.deleteButton}">${translate('deleteEvent')}</vaadin-button>
 
     </span>
       
@@ -214,7 +215,7 @@ export class EventsView extends View {
 
   private renderDialog = () => html`
     <vaadin-vertical-layout style="align-items: stretch; width: 18rem; max-width: 100%;">
-      <vaadin-text-field id = "eventName" required label="Event name" value="${this.selectedItems.length > 0 ? this.selectedItems[0].name : ''}"></vaadin-text-field>
+      <vaadin-text-field id = "eventName" required header="${translate('event_name')}" value="${this.selectedItems.length > 0 ? this.selectedItems[0].name : ''}"></vaadin-text-field>
       <vaadin-email-field id = "email"
       label="Email address"
       name="email"
