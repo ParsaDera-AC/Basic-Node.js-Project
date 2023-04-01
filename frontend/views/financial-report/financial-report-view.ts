@@ -20,6 +20,8 @@ import { GridActiveItemChangedEvent } from '@vaadin/vaadin-grid/vaadin-grid';
 import { ConfirmDialogOpenedChangedEvent } from '@vaadin/confirm-dialog';
 import { dialogFooterRenderer, dialogRenderer } from '@vaadin/dialog/lit';
 import { DialogOpenedChangedEvent } from '@vaadin/dialog';
+import * as FinancialReportEndpoint from 'Frontend/generated/FinancialReportEndpoint';
+import { EndpointValidationError } from '@hilla/frontend';
 
 @customElement('financial-report-view')
 
@@ -35,15 +37,29 @@ export class FinancialReportView extends View {
     this.prepareData();
   }
 
-  private reports: FinancialReport [] = [
-    { title: "Tax slip", date: this.formatDate(new Date("2022/01/01")), type: "T4" , income: 10000, totalSpent: 500, netTotal: 9500},
-    { title: "Tax slip", date: this.formatDate(new Date("2021/01/01")), type: "T4", income: 10000, totalSpent: 500, netTotal: 9500 },
-    { title: "Q1 Report", date: this.formatDate(new Date("2023/01/01")), type: "Quarterly Fiscal", income: 10000, totalSpent: 500, netTotal: 9500 }
-  ];
+  private reports: FinancialReport [] = [];
   @state()
   private selectedItems: FinancialReport[] = [];
   private selected: boolean = false;
 
+  async retrieveAllReports() {
+    
+    try {
+    const serverResponse = await FinancialReportEndpoint.retrieveAllReports();
+    this.reports = serverResponse as FinancialReport[];
+    //This just triggers the table inputs
+    this.close();
+    } catch (error) {
+      if (error instanceof EndpointValidationError) {
+        (error as EndpointValidationError).validationErrorData.forEach(
+          ({ message }) => {
+            console.warn(message);
+          }
+        );
+      }
+    }
+  
+  }
   render() {
     return html`
     <style>
@@ -123,6 +139,7 @@ private renderFooter = () => html`
   }
 
   prepareData(){
+    this.retrieveAllReports();
     this.reports.sort((a, b) => {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
