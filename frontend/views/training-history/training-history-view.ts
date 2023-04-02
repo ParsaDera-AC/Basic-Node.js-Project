@@ -18,6 +18,7 @@ import '@vaadin/confirm-dialog';
 import '@vaadin/grid/vaadin-grid-sort-column.js';
 import '@vaadin/text-area';
 import { TrainingHistory } from '../../../src/main/models/TrainingHistory'
+import { translate } from 'lit-translate';
 
 
 
@@ -51,9 +52,9 @@ export class TrainingHistoryView extends View {
     <vaadin-vertical-layout>
     <span class="table">
     <vaadin-grid .items="${this.items}">    
-    <vaadin-grid-sort-column path="registeredDate" header="Registered Date"></vaadin-grid-sort-column>
-    <vaadin-grid-column path="course" header="Course Name"></vaadin-grid-column>
-    <vaadin-grid-sort-column path="completedDate" header="Completion Date"></vaadin-grid-sort-column>
+    <vaadin-grid-sort-column path="registeredDate" header="${translate('RegisterDate')}"></vaadin-grid-sort-column>
+    <vaadin-grid-column path="course" header="${translate('CourseName')}"></vaadin-grid-column>
+    <vaadin-grid-sort-column path="completedDate" header="${translate('CompletionDate')}"></vaadin-grid-sort-column>
     </vaadin-grid>
     </span>
 

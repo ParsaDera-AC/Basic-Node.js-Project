@@ -7,6 +7,25 @@
     "event_confirmation": "Event Confirmation",
     "createEvent": "Create Event",
     "editEvent": "Edit Event",
-    "deleteEvent": "Delete Event"
+    "deleteEvent": "Delete Event",
+    "user_homepage_title": "User Homepage",
+    "event_homepage_title": "Events",
+    "training_history_title": "Training",
+    "hr_history_title": "HR",
+    "financial_report_title": "Financial Report",
+    "HireDate": "Hire Date",
+    "Reason": "Reason",
+    "LeaveDate": "Leave Date",
+    "CourseName": "Course Name",
+    "RegisterDate": "Register Date",
+    "CompletionDate": "Completion Date",
+    "Title": "Title",
+    "Date": "Date",
+    "Type": "Type",
+    "View": "View",
+    "Income": "Income",
+    "TotalSpent": "Total Spent",
+    "NetTotal": "Net Total",
+    "NewEvent": "New Event"
 }
 

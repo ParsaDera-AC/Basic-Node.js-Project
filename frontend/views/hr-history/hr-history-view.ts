@@ -3,6 +3,7 @@ import { html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { View } from '../view';
 import { HumanResourcesHistory } from '../../../src/main/models/HumanResourcesHistory'
+import { translate } from 'lit-translate';
 
 
 @customElement('hr-history-view')
@@ -39,9 +40,9 @@ export class HrHistoryView extends View {
         <span class="table">
         <vaadin-grid
         .items="${this.history}">
-          <vaadin-grid-sort-column header="Hire Date" path="hireDate"></vaadin-grid-sort-column>
-          <vaadin-grid-column header="Reason" path="reason" ></vaadin-grid-column>
-          <vaadin-grid-sort-column header="Leave Date" path="leaveDate"></vaadin-grid-sort-column>
+          <vaadin-grid-sort-column header="${translate('HireDate')}" path="hireDate"></vaadin-grid-sort-column>
+          <vaadin-grid-column header="${translate('Reason')}" path="reason" ></vaadin-grid-column>
+          <vaadin-grid-sort-column header="${translate('LeaveDate')}" path="leaveDate"></vaadin-grid-sort-column>
         </vaadin-grid>
         </span>
        

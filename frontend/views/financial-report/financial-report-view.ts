@@ -22,7 +22,7 @@ import { dialogFooterRenderer, dialogRenderer } from '@vaadin/dialog/lit';
 import { DialogOpenedChangedEvent } from '@vaadin/dialog';
 import * as FinancialReportEndpoint from 'Frontend/generated/FinancialReportEndpoint';
 import { EndpointValidationError } from '@hilla/frontend';
-
+import { translate } from 'lit-translate';
 @customElement('financial-report-view')
 
 export class FinancialReportView extends View {
@@ -87,9 +87,9 @@ export class FinancialReportView extends View {
           this.selectedItems = item ? [item] : [];
         }}"
       >
-          <vaadin-grid-column header="Title" path="title"></vaadin-grid-column>
-          <vaadin-grid-sort-column header="Date" path="date" ></vaadin-grid-sort-column>
-          <vaadin-grid-column header="Type" path="type"></vaadin-grid-column>
+          <vaadin-grid-column header="${translate('Title')}" path="title"></vaadin-grid-column>
+          <vaadin-grid-sort-column header="${translate('Date')}" path="date" ></vaadin-grid-sort-column>
+          <vaadin-grid-column header="${translate('Type')}" path="type"></vaadin-grid-column>
         </vaadin-grid>
         </span>
 
@@ -100,7 +100,7 @@ export class FinancialReportView extends View {
       ></vaadin-dialog>
         <vaadin-horizontal-layout>
         <span class="button-spacing">
-        <vaadin-button @click="${this.viewButton}">View</vaadin-button>
+        <vaadin-button @click="${this.viewButton}">${translate('View')}</vaadin-button>
         <span class="spacing">
         <vaadin-button  @click="${this.onClickBack}">Back</vaadin-button>
         </span>
@@ -122,9 +122,9 @@ export class FinancialReportView extends View {
 
   private renderDialog = () => html`
   <vaadin-vertical-layout style="align-items: stretch; width: 18rem; max-width: 100%;">
-    <vaadin-text-field readonly label="Income" value = "${this.reports[0].income}"></vaadin-text-field>
-    <vaadin-text-field readonly label="Total spent" value = "${this.reports[0].totalSpent}"></vaadin-text-field>
-    <vaadin-text-field readonly label="Net total" value = "${this.reports[0].netTotal}"></vaadin-text-field>
+    <vaadin-text-field readonly label="${translate('Income')}" value = "${this.reports[0].income}"></vaadin-text-field>
+    <vaadin-text-field readonly label="${translate('TotalSpent')}" value = "${this.reports[0].totalSpent}"></vaadin-text-field>
+    <vaadin-text-field readonly label="${translate('NetTotal')}" value = "${this.reports[0].netTotal}"></vaadin-text-field>
   </vaadin-vertical-layout>
   
 `;
