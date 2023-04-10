@@ -9,10 +9,11 @@
     "sourceMap": true,
     "jsx": "react-jsx",
     "inlineSources": true,
-    "module": "esNext",
+    "module": "commonjs",
     "target": "es2020",
     "moduleResolution": "node",
     "strict": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
@@ -31,7 +32,7 @@
   },
   "include": [
     "frontend/**/*",
-    "types.d.ts"
-  ],
-  "exclude": []
+    "types.d.ts",
+    "test/view.test.ts"  ],
+  "exclude": ["node_modules"]
 }
