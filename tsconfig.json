@@ -32,7 +32,6 @@
   },
   "include": [
     "frontend/**/*",
-    "types.d.ts",
-    "test/view.test.ts"  ],
+    "types.d.ts"],
   "exclude": ["node_modules"]
 }

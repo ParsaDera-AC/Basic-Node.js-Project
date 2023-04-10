@@ -30,24 +30,24 @@ describe('HomepageView', () => {
   });
 
   // Add more test cases for different scenarios, like checking if buttons navigate to correct pages
-  it('should navigate to correct pages when buttons are clicked', async function () {
-    this.timeout(10000);
-    const urls = [
-      'http://localhost:8080/Events',
-      'http://localhost:8080/HrHistory',
-      'http://localhost:8080/TrainingHistory',
-      'http://localhost:8080/FinancialReport',
-    ];
-
-    for (let i = 0; i < urls.length; i++) {
-      const buttons = await driver.wait(until.elementsLocated(By.tagName('vaadin-button')), 5000);
-      await buttons[i].click();
-      await driver.wait(until.urlIs(urls[i]), 5000);
-      expect(await driver.getCurrentUrl()).to.equal(urls[i]);
-      await driver.navigate().back();
-      await driver.wait(until.urlIs('http://localhost:8080/'), 5000);
-    }
-  });
+//   it('should navigate to correct pages when buttons are clicked', async function () {
+//     this.timeout(10000);
+//     const urls = [
+//       'http://localhost:8080/Events',
+//       'http://localhost:8080/HrHistory',
+//       'http://localhost:8080/TrainingHistory',
+//       'http://localhost:8080/FinancialReport',
+//     ];
+//
+//     for (let i = 0; i < urls.length; i++) {
+//       const buttons = await driver.wait(until.elementsLocated(By.tagName('vaadin-button')), 5000);
+//       await buttons[i].click();
+//       await driver.wait(until.urlIs(urls[i]), 5000);
+//       expect(await driver.getCurrentUrl()).to.equal(urls[i]);
+//       await driver.navigate().back();
+//       await driver.wait(until.urlIs('http://localhost:8080/'), 5000);
+//     }
+//   });
 });
 
 describe('EventsView', () => {

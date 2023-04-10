@@ -2,7 +2,7 @@
   "name": "no-name",
   "license": "UNLICENSED",
   "scripts": {
-    "test": "mocha --require ts-node/register 'test/*.test.ts'"
+    "test": "mocha --require ts-node/register 'frontend/test/*.test.ts'"
   },
   "dependencies": {
     "@adobe/lit-mobx": "2.0.0",
