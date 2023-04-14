@@ -64,21 +64,28 @@ export class FinancialReportView extends View {
     return html`
     <style>
     .table{
-      width: 1000px;
-      padding-left:480px;
-      padding-bottom: 20px;
+      width: 1500%;
+      height: 100%;
+      overflow: auto;
+      margin-left: 750%;
+      margin-bottom: 10%;
     }
-    .button-spacing{
-      padding-left:480px;
+    .viewButton {
+      margin-left: 750%;
+      
     }
-    .spacing{
-      padding-left: 850px;
+
+    .backButton {
+      margin-left: 2150%;
+     
+      margin-top: -60%;
+      
     }
     </style>
 
 
     <vaadin-vertical-layout>
-        <span class="table">
+        <div class="table">
         <vaadin-grid
         .items="${this.reports}"
         .selectedItems="${this.selectedItems}"
@@ -91,7 +98,7 @@ export class FinancialReportView extends View {
           <vaadin-grid-sort-column header="${translate('Date')}" path="date" ></vaadin-grid-sort-column>
           <vaadin-grid-column header="${translate('Type')}" path="type"></vaadin-grid-column>
         </vaadin-grid>
-        </span>
+        </div>
 
         <vaadin-dialog header-title="View Report" .opened="${this.dialogOpened}" @opened-changed="${(e: DialogOpenedChangedEvent) => (this.dialogOpened = e.detail.value)}"
         ${dialogRenderer(this.renderDialog, [])}
@@ -99,12 +106,12 @@ export class FinancialReportView extends View {
 
       ></vaadin-dialog>
         <vaadin-horizontal-layout>
-        <span class="button-spacing">
+        <div class="viewButton">
         <vaadin-button @click="${this.viewButton}">${translate('View')}</vaadin-button>
-        <span class="spacing">
+        </div>
+        <div class="backButton">
         <vaadin-button  @click="${this.onClickBack}">Back</vaadin-button>
-        </span>
-        </span>
+        </div>
         </vaadin-horizontal-layout>
         </vaadin-vertical-layout>
     `;

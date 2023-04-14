@@ -24,12 +24,16 @@ export class HrHistoryView extends View {
     return html`
     <style>
     .table{
-      width: 1000px;
-      padding-left:480px;
-      padding-bottom: 20px;
+      width: 1500%;
+      height: 100%;
+      overflow: auto;
+      margin-left: 750%;
+      margin-bottom: 10%;
     }
     .spacing{
-      padding-left: 1410px;
+      margin-left: 2150%;
+     
+      margin-top: 20%;
     }
     </style>
 
@@ -37,19 +41,19 @@ export class HrHistoryView extends View {
     <vaadin-vertical-layout>
 
 
-        <span class="table">
+        <div class="table">
         <vaadin-grid
         .items="${this.history}">
           <vaadin-grid-sort-column header="${translate('HireDate')}" path="hireDate"></vaadin-grid-sort-column>
           <vaadin-grid-column header="${translate('Reason')}" path="reason" ></vaadin-grid-column>
           <vaadin-grid-sort-column header="${translate('LeaveDate')}" path="leaveDate"></vaadin-grid-sort-column>
         </vaadin-grid>
-        </span>
+        </div>
        
-        <span class="spacing">
+        <div class="spacing">
         <vaadin-button  @click="${this.onClickBack}">Back</vaadin-button>
         </vaadin-vertical-layout>
-        </span>
+        </div>
     `;
   }
 

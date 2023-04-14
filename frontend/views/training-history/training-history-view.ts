@@ -41,26 +41,30 @@ export class TrainingHistoryView extends View {
     return html`
     <style>
     .table{
-      width: 1000px;
-      padding-left:480px;
-      padding-bottom: 20px;
+      width: 1500%;
+      height: 100%;
+      overflow: auto;
+      margin-left: 750%;
+      margin-bottom: 10%;
     }
-    .spacing{
-      padding-left: 1410px;
+    .backButton{
+      margin-left: 2150%;
+     
+      margin-top: 20%;
     }
     </style>
     <vaadin-vertical-layout>
-    <span class="table">
+    <div class="table">
     <vaadin-grid .items="${this.items}">    
     <vaadin-grid-sort-column path="registeredDate" header="${translate('RegisterDate')}"></vaadin-grid-sort-column>
     <vaadin-grid-column path="course" header="${translate('CourseName')}"></vaadin-grid-column>
     <vaadin-grid-sort-column path="completedDate" header="${translate('CompletionDate')}"></vaadin-grid-sort-column>
     </vaadin-grid>
-    </span>
+    </div>
 
-    <span class="spacing">
+    <div class="backButton">
     <vaadin-button @click="${this.onClickBack}">Back</vaadin-button>
-    </span>
+    </div>
     </vaadin-vertical-layout>
       
     `;
