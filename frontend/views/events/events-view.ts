@@ -214,7 +214,8 @@ export class EventsView extends View {
       <vaadin-text-field
         id="eventName"
         required
-        header="${translate('event_name')}"
+        label="${translate('event_name')}"
+        
         value="${this.selectedItems.length > 0 ? this.selectedItems[0].name : ''}"
       ></vaadin-text-field>
       <vaadin-email-field
