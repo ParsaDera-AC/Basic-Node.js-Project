@@ -64,19 +64,19 @@ export class FinancialReportView extends View {
     return html`
     <style>
     .table{
-      width: 1500%;
+      width: 1100%;
       height: 100%;
       overflow: auto;
-      margin-left: 750%;
+      margin-left: 450%;
       margin-bottom: 10%;
     }
     .viewButton {
-      margin-left: 750%;
+      margin-left: 450%;
       
     }
 
     .backButton {
-      margin-left: 2150%;
+      margin-left: 1450%;
      
       margin-top: -60%;
       

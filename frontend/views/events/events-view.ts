@@ -133,24 +133,19 @@ export class EventsView extends View {
       <style>
       
         .table {
-          width: 400%;
+          width: 200%;
           height: 100%;
           overflow: auto;
-          
           margin-left: 110%;
           margin-bottom: 10%;
         }
-
         .buttons {
           margin-left: 110%;
-         
           width: 100%;
         }
-
         .backButton {
-          margin-left: 380%;
-          margin-top: -13%;
-          
+          margin-left: 180%;
+          margin-top: -13%;       
           width: 100%;
           padding-bottom: 30%;
         }

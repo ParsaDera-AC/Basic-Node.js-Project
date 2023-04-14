@@ -24,14 +24,14 @@ export class HrHistoryView extends View {
     return html`
     <style>
     .table{
-      width: 1500%;
+      width: 1100%;
       height: 100%;
       overflow: auto;
-      margin-left: 750%;
+      margin-left: 450%;
       margin-bottom: 10%;
     }
     .spacing{
-      margin-left: 2150%;
+      margin-left: 1450%;
      
       margin-top: 20%;
     }
